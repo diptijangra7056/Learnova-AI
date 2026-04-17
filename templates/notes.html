@@ -1,0 +1,305 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ course_name }} Notes</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f7f9fc;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 70%;
+            margin: 40px auto;
+            background: white;
+            padding: 20px 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        ul {
+            list-style-type: none;
+            padding-left: 20px;
+        }
+        li {
+            margin: 8px 0;
+        }
+        a.pdf-link {
+            display: block;
+            padding: 8px;
+            text-decoration: none;
+            background: #3498db;
+            color: white;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+        a.pdf-link:hover {
+            background: #2980b9;
+        }
+        .back {
+            margin-top: 20px;
+            display: inline-block;
+            color: #3498db;
+            text-decoration: none;
+        }
+        .back:hover {
+            text-decoration: underline;
+        }
+        .folder-name {
+            font-weight: bold;
+            margin-top: 12px;
+            color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>📄 {{ course_name }} Notes</h2>
+
+    {% if pdfs %}
+        <ul>
+        {% for pdf in pdfs %}
+            {% if '/' in pdf %}
+                {% set parts = pdf.split('/') %}
+                <li class="folder-name">{{ parts[0] }}</li>
+                <ul>
+                    <li><a href="{{ url_for('download_notes', filename=pdf) }}" class="pdf-link" target="_blank">{{ parts[1] }}</a></li>
+                </ul>
+            {% else %}
+                <li><a href="{{ url_for('download_notes', course_name=course_name, filename=pdf) }}" target="_blank">
+    {{ pdf }}
+</a>
+</li>
+            {% endif %}
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No notes available for {{ course_name }}.</p>
+    {% endif %}
+
+    <a href="{{ url_for('dashboard') }}" class="back">⬅ Back to Dashboard</a>
+</div>
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ course_name }} Notes</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    /* ===== General Styling ===== */
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #eef2f3, #d9e4f5);
+      margin: 0;
+      padding: 0;
+      color: #2c3e50;
+    }
+
+    .container {
+      width: 80%;
+      max-width: 1000px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      animation: fadeInUp 0.8s ease-in-out;
+    }
+
+    h2 {
+      text-align: center;
+      color: #2c3e50;
+      font-size: 2rem;
+      margin-bottom: 25px;
+      position: relative;
+    }
+
+    h2::after {
+      content: "";
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background: #3498db;
+      border-radius: 4px;
+      animation: slideIn 1s ease-in-out;
+    }
+
+    /* ===== Search Bar ===== */
+    .search-box {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .search-box input {
+      width: 80%;
+      max-width: 400px;
+      padding: 12px 16px;
+      font-size: 1rem;
+      border: 2px solid #d0d7e2;
+      border-radius: 30px;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    .search-box input:focus {
+      border-color: #3498db;
+      box-shadow: 0 0 8px rgba(52,152,219,0.4);
+    }
+
+    /* ===== Notes List Styling ===== */
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    li {
+      margin: 12px 0;
+    }
+
+    .pdf-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #f9fbff;
+      padding: 12px 18px;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      animation: fadeInUp 0.6s ease;
+    }
+
+    .pdf-card:hover {
+      transform: translateY(-3px);
+      background: #f0f6ff;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+    }
+
+    .pdf-card a {
+      text-decoration: none;
+      font-weight: 500;
+      color: #3498db;
+      font-size: 1rem;
+      transition: color 0.3s;
+    }
+
+    .pdf-card a:hover {
+      color: #1d6fa5;
+    }
+
+    .folder-name {
+      font-weight: 600;
+      margin-top: 20px;
+      color: #34495e;
+      font-size: 1.1rem;
+      padding-left: 6px;
+    }
+
+    /* ===== Back Button ===== */
+    .back {
+      display: inline-block;
+      margin-top: 25px;
+      text-decoration: none;
+      color: #fff;
+      background: #3498db;
+      padding: 10px 18px;
+      border-radius: 30px;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .back:hover {
+      background: #1d6fa5;
+      transform: translateY(-2px);
+    }
+
+    /* ===== Animations ===== */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideIn {
+      from {
+        width: 0;
+      }
+      to {
+        width: 80px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>📄 {{ course_name }} Notes</h2>
+
+    <!-- Search Box -->
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="🔍 Search notes...">
+    </div>
+
+    {% if pdfs %}
+      <ul id="notesList">
+        {% for pdf in pdfs %}
+          {% if '/' in pdf %}
+            {% set parts = pdf.split('/') %}
+            <li class="folder-name">📂 {{ parts[0] }}</li>
+            <ul>
+              <li class="pdf-item">
+                <div class="pdf-card">
+                  <a href="{{ url_for('download_notes', filename=pdf) }}" target="_blank">{{ parts[1] }}</a>
+                </div>
+              </li>
+            </ul>
+          {% else %}
+            <li class="pdf-item">
+              <div class="pdf-card">
+                <a href="{{ url_for('download_notes', course_name=course_name, filename=pdf) }}" target="_blank">{{ pdf }}</a>
+              </div>
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p style="text-align:center; color:#7f8c8d;">No notes available for {{ course_name }}.</p>
+    {% endif %}
+
+    <a href="{{ url_for('dashboard') }}" class="back">⬅ Back to Dashboard</a>
+  </div>
+
+  <script>
+    // ===== Live Search Filter =====
+    const searchInput = document.getElementById("searchInput");
+    const notesList = document.getElementById("notesList");
+    const items = notesList.getElementsByClassName("pdf-item");
+
+    searchInput.addEventListener("keyup", function () {
+      const filter = searchInput.value.toLowerCase();
+      Array.from(items).forEach(item => {
+        const text = item.textContent.toLowerCase();
+        item.style.display = text.includes(filter) ? "" : "none";
+      });
+    });
+  </script>
+</body>
+</html>

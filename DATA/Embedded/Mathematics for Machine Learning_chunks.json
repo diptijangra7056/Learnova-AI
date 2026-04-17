@@ -1,0 +1,894 @@
+[
+  {
+    "content": "Mathematics for Machine Learning\nGarrett Thomas\nDepartment of Electrical Engineering and Computer Sciences\nUniversity of California, Berkeley\nJanuary 11, 2018\n1\nAbout\nMachine learning uses tools from a variety of mathematical ﬁelds. This document is an attempt to\nprovide a summary of the mathematical background needed for an introductory class in machine\nlearning, which at UC Berkeley is known as CS 189/289A.",
+    "source": "Maths for ML.pdf (chunk 0)"
+  },
+  {
+    "content": "learning, which at UC Berkeley is known as CS 189/289A.\nOur assumption is that the reader is already familiar with the basic concepts of multivariable calculus\nand linear algebra (at the level of UCB Math 53/54). We emphasize that this document is not a\nreplacement for the prerequisite classes. Most subjects presented here are covered rather minimally;\nwe intend to give an overview and point the interested reader to more comprehensive treatments for\nfurther details.",
+    "source": "Maths for ML.pdf (chunk 1)"
+  },
+  {
+    "content": "further details.\nNote that this document concerns math background for machine learning, not machine learning\nitself. We will not discuss speciﬁc machine learning models or algorithms except possibly in passing\nto highlight the relevance of a mathematical concept.\nEarlier versions of this document did not include proofs. We have begun adding in proofs where\nthey are reasonably short and aid in understanding. These proofs are not necessary background for",
+    "source": "Maths for ML.pdf (chunk 2)"
+  },
+  {
+    "content": "they are reasonably short and aid in understanding. These proofs are not necessary background for\nCS 189 but can be used to deepen the reader’s understanding.\nYou are free to distribute this document as you wish. The latest version can be found at http://\ngwthomas.github.io/docs/math4ml.pdf. Please report any mistakes to gwthomas@berkeley.edu.\n1\nContents\n1\nAbout\n1\n2\nNotation\n5\n3\nLinear Algebra\n6\n3.1\nVector spaces . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n6",
+    "source": "Maths for ML.pdf (chunk 3)"
+  },
+  {
+    "content": "3.1\nVector spaces . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n6\n3.1.1\nEuclidean space . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n6\n3.1.2\nSubspaces . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n7\n3.2\nLinear maps . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n7\n3.2.1\nThe matrix of a linear map . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n8\n3.2.2",
+    "source": "Maths for ML.pdf (chunk 4)"
+  },
+  {
+    "content": "7\n3.2.1\nThe matrix of a linear map . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n8\n3.2.2\nNullspace, range\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n9\n3.3\nMetric spaces . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n9\n3.4\nNormed spaces . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n9\n3.5\nInner product spaces . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n10\n3.5.1",
+    "source": "Maths for ML.pdf (chunk 5)"
+  },
+  {
+    "content": "10\n3.5.1\nPythagorean Theorem . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n11\n3.5.2\nCauchy-Schwarz inequality\n. . . . . . . . . . . . . . . . . . . . . . . . . . . .\n11\n3.5.3\nOrthogonal complements and projections\n. . . . . . . . . . . . . . . . . . . .\n12\n3.6\nEigenthings . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n15\n3.7\nTrace . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n15\n3.8",
+    "source": "Maths for ML.pdf (chunk 6)"
+  },
+  {
+    "content": "15\n3.8\nDeterminant . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n16\n3.9\nOrthogonal matrices . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n16\n3.10 Symmetric matrices\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n17\n3.10.1 Rayleigh quotients . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n17\n3.11 Positive (semi-)deﬁnite matrices . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n18",
+    "source": "Maths for ML.pdf (chunk 7)"
+  },
+  {
+    "content": "18\n3.11.1 The geometry of positive deﬁnite quadratic forms . . . . . . . . . . . . . . . .\n19\n3.12 Singular value decomposition . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n20\n3.13 Fundamental Theorem of Linear Algebra . . . . . . . . . . . . . . . . . . . . . . . . .\n21\n3.14 Operator and matrix norms . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n22\n3.15 Low-rank approximation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n24",
+    "source": "Maths for ML.pdf (chunk 8)"
+  },
+  {
+    "content": "3.15 Low-rank approximation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n24\n3.16 Pseudoinverses\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n25\n3.17 Some useful matrix identities . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n26\n3.17.1 Matrix-vector product as linear combination of matrix columns . . . . . . . .\n26\n3.17.2 Sum of outer products as matrix-matrix product . . . . . . . . . . . . . . . .\n26\n3.17.3 Quadratic forms",
+    "source": "Maths for ML.pdf (chunk 9)"
+  },
+  {
+    "content": "26\n3.17.3 Quadratic forms\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n26\n4\nCalculus and Optimization\n27\n2\n4.1\nExtrema . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n27\n4.2\nGradients . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n27\n4.3\nThe Jacobian . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n27\n4.4",
+    "source": "Maths for ML.pdf (chunk 10)"
+  },
+  {
+    "content": "The Jacobian . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n27\n4.4\nThe Hessian . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n28\n4.5\nMatrix calculus . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n28\n4.5.1\nThe chain rule\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n28\n4.6\nTaylor’s theorem . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n29\n4.7",
+    "source": "Maths for ML.pdf (chunk 11)"
+  },
+  {
+    "content": "Taylor’s theorem . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n29\n4.7\nConditions for local minima . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n29\n4.8\nConvexity . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n31\n4.8.1\nConvex sets . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n31\n4.8.2\nBasics of convex functions . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n31\n4.8.3",
+    "source": "Maths for ML.pdf (chunk 12)"
+  },
+  {
+    "content": "4.8.2\nBasics of convex functions . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n31\n4.8.3\nConsequences of convexity . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n32\n4.8.4\nShowing that a function is convex\n. . . . . . . . . . . . . . . . . . . . . . . .\n33\n4.8.5\nExamples . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n36\n5\nProbability\n37\n5.1\nBasics . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n37\n5.1.1",
+    "source": "Maths for ML.pdf (chunk 13)"
+  },
+  {
+    "content": "37\n5.1.1\nConditional probability\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n38\n5.1.2\nChain rule . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n38\n5.1.3\nBayes’ rule\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n38\n5.2\nRandom variables . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n39\n5.2.1\nThe cumulative distribution function . . . . . . . . . . . . . . . . . . . . . . .\n39\n5.2.2",
+    "source": "Maths for ML.pdf (chunk 14)"
+  },
+  {
+    "content": "5.2.1\nThe cumulative distribution function . . . . . . . . . . . . . . . . . . . . . . .\n39\n5.2.2\nDiscrete random variables . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n40\n5.2.3\nContinuous random variables . . . . . . . . . . . . . . . . . . . . . . . . . . .\n40\n5.2.4\nOther kinds of random variables\n. . . . . . . . . . . . . . . . . . . . . . . . .\n40\n5.3\nJoint distributions\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n41\n5.3.1",
+    "source": "Maths for ML.pdf (chunk 15)"
+  },
+  {
+    "content": ". . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n41\n5.3.1\nIndependence of random variables\n. . . . . . . . . . . . . . . . . . . . . . . .\n41\n5.3.2\nMarginal distributions . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n41\n5.4\nGreat Expectations . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n41\n5.4.1\nProperties of expected value . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n42\n5.5",
+    "source": "Maths for ML.pdf (chunk 16)"
+  },
+  {
+    "content": "5.4.1\nProperties of expected value . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n42\n5.5\nVariance . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n42\n5.5.1\nProperties of variance\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n42\n5.5.2\nStandard deviation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n42\n5.6\nCovariance\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n43\n5.6.1",
+    "source": "Maths for ML.pdf (chunk 17)"
+  },
+  {
+    "content": ". . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n43\n5.6.1\nCorrelation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n43\n5.7\nRandom vectors . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n43\n3\n5.8\nEstimation of Parameters . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n44\n5.8.1\nMaximum likelihood estimation . . . . . . . . . . . . . . . . . . . . . . . . . .\n44\n5.8.2",
+    "source": "Maths for ML.pdf (chunk 18)"
+  },
+  {
+    "content": "44\n5.8.1\nMaximum likelihood estimation . . . . . . . . . . . . . . . . . . . . . . . . . .\n44\n5.8.2\nMaximum a posteriori estimation . . . . . . . . . . . . . . . . . . . . . . . . .\n45\n5.9\nThe Gaussian distribution . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n45\n5.9.1\nThe geometry of multivariate Gaussians . . . . . . . . . . . . . . . . . . . . .\n45\nReferences\n47\n4\n2\nNotation\nNotation\nMeaning\nR\nset of real numbers\nRn",
+    "source": "Maths for ML.pdf (chunk 19)"
+  },
+  {
+    "content": "45\nReferences\n47\n4\n2\nNotation\nNotation\nMeaning\nR\nset of real numbers\nRn\nset (vector space) of n-tuples of real numbers, endowed with the usual inner product\nRm×n\nset (vector space) of m-by-n matrices\nδij\nKronecker delta, i.e. δij = 1 if i = j, 0 otherwise\n∇f(x)\ngradient of the function f at x\n∇2f(x)\nHessian of the function f at x\nA⊤\ntranspose of the matrix A\nΩ\nsample space\nP(A)\nprobability of event A\np(X)\ndistribution of random variable X\np(x)\nprobability density/mass function evaluated at x\nAc",
+    "source": "Maths for ML.pdf (chunk 20)"
+  },
+  {
+    "content": "p(X)\ndistribution of random variable X\np(x)\nprobability density/mass function evaluated at x\nAc\ncomplement of event A\nA ˙∪B\nunion of A and B, with the extra requirement that A ∩B = ∅\nE[X]\nexpected value of random variable X\nVar(X)\nvariance of random variable X\nCov(X, Y )\ncovariance of random variables X and Y\nOther notes:\n• Vectors and matrices are in bold (e.g. x, A). This is true for vectors in Rn as well as for",
+    "source": "Maths for ML.pdf (chunk 21)"
+  },
+  {
+    "content": "• Vectors and matrices are in bold (e.g. x, A). This is true for vectors in Rn as well as for\nvectors in general vector spaces. We generally use Greek letters for scalars and capital Roman\nletters for matrices and random variables.\n• To stay focused at an appropriate level of abstraction, we restrict ourselves to real values. In\nmany places in this document, it is entirely possible to generalize to the complex case, but we\nwill simply state the version that applies to the reals.",
+    "source": "Maths for ML.pdf (chunk 22)"
+  },
+  {
+    "content": "will simply state the version that applies to the reals.\n• We assume that vectors are column vectors, i.e. that a vector in Rn can be interpreted as an\nn-by-1 matrix. As such, taking the transpose of a vector is well-deﬁned (and produces a row\nvector, which is a 1-by-n matrix).\n5\n3\nLinear Algebra\nIn this section we present important classes of spaces in which our data will live and our operations\nwill take place: vector spaces, metric spaces, normed spaces, and inner product spaces. Generally",
+    "source": "Maths for ML.pdf (chunk 23)"
+  },
+  {
+    "content": "will take place: vector spaces, metric spaces, normed spaces, and inner product spaces. Generally\nspeaking, these are deﬁned in such a way as to capture one or more important properties of Euclidean\nspace but in a more general way.\n3.1\nVector spaces\nVector spaces are the basic setting in which linear algebra happens. A vector space V is a set (the\nelements of which are called vectors) on which two operations are deﬁned: vectors can be added",
+    "source": "Maths for ML.pdf (chunk 24)"
+  },
+  {
+    "content": "elements of which are called vectors) on which two operations are deﬁned: vectors can be added\ntogether, and vectors can be multiplied by real numbers1 called scalars. V must satisfy\n(i) There exists an additive identity (written 0) in V such that x + 0 = x for all x ∈V\n(ii) For each x ∈V , there exists an additive inverse (written −x) such that x + (−x) = 0\n(iii) There exists a multiplicative identity (written 1) in R such that 1x = x for all x ∈V",
+    "source": "Maths for ML.pdf (chunk 25)"
+  },
+  {
+    "content": "(iii) There exists a multiplicative identity (written 1) in R such that 1x = x for all x ∈V\n(iv) Commutativity: x + y = y + x for all x, y ∈V\n(v) Associativity: (x + y) + z = x + (y + z) and α(βx) = (αβ)x for all x, y, z ∈V and α, β ∈R\n(vi) Distributivity: α(x + y) = αx + αy and (α + β)x = αx + βx for all x, y ∈V and α, β ∈R\nA set of vectors v1, . . . , vn ∈V is said to be linearly independent if\nα1v1 + · · · + αnvn = 0\nimplies\nα1 = · · · = αn = 0.",
+    "source": "Maths for ML.pdf (chunk 26)"
+  },
+  {
+    "content": "α1v1 + · · · + αnvn = 0\nimplies\nα1 = · · · = αn = 0.\nThe span of v1, . . . , vn ∈V is the set of all vectors that can be expressed of a linear combination\nof them:\nspan{v1, . . . , vn} = {v ∈V : ∃α1, . . . , αn such that α1v1 + · · · + αnvn = v}\nIf a set of vectors is linearly independent and its span is the whole of V , those vectors are said to\nbe a basis for V . In fact, every linearly independent set of vectors forms a basis for its span.",
+    "source": "Maths for ML.pdf (chunk 27)"
+  },
+  {
+    "content": "be a basis for V . In fact, every linearly independent set of vectors forms a basis for its span.\nIf a vector space is spanned by a ﬁnite number of vectors, it is said to be ﬁnite-dimensional.\nOtherwise it is inﬁnite-dimensional. The number of vectors in a basis for a ﬁnite-dimensional\nvector space V is called the dimension of V and denoted dim V .\n3.1.1\nEuclidean space\nThe quintessential vector space is Euclidean space, which we denote Rn. The vectors in this space",
+    "source": "Maths for ML.pdf (chunk 28)"
+  },
+  {
+    "content": "The quintessential vector space is Euclidean space, which we denote Rn. The vectors in this space\nconsist of n-tuples of real numbers:\nx = (x1, x2, . . . , xn)\nFor our purposes, it will be useful to think of them as n × 1 matrices, or column vectors:\nx =\n\n\nx1\nx2\n...\nxn\n\n\n1 More generally, vector spaces can be deﬁned over any ﬁeld F. We take F = R in this document to avoid an\nunnecessary diversion into abstract algebra.\n6",
+    "source": "Maths for ML.pdf (chunk 29)"
+  },
+  {
+    "content": "unnecessary diversion into abstract algebra.\n6\nAddition and scalar multiplication are deﬁned component-wise on vectors in Rn:\nx + y =\n\n\nx1 + y1\n...\nxn + yn\n\n,\nαx =\n\n\nαx1\n...\nαxn\n\n\nEuclidean space is used to mathematically represent physical space, with notions such as distance,\nlength, and angles. Although it becomes hard to visualize for n > 3, these concepts generalize\nmathematically in obvious ways. Even when you’re working in more general settings than Rn, it is",
+    "source": "Maths for ML.pdf (chunk 30)"
+  },
+  {
+    "content": "mathematically in obvious ways. Even when you’re working in more general settings than Rn, it is\noften useful to visualize vector addition and scalar multiplication in terms of 2D vectors in the plane\nor 3D vectors in space.\n3.1.2\nSubspaces\nVector spaces can contain other vector spaces. If V is a vector space, then S ⊆V is said to be a\nsubspace of V if\n(i) 0 ∈S\n(ii) S is closed under addition: x, y ∈S implies x + y ∈S\n(iii) S is closed under scalar multiplication: x ∈S, α ∈R implies αx ∈S",
+    "source": "Maths for ML.pdf (chunk 31)"
+  },
+  {
+    "content": "(iii) S is closed under scalar multiplication: x ∈S, α ∈R implies αx ∈S\nNote that V is always a subspace of V , as is the trivial vector space which contains only 0.\nAs a concrete example, a line passing through the origin is a subspace of Euclidean space.\nIf U and W are subspaces of V , then their sum is deﬁned as\nU + W = {u + w | u ∈U, w ∈W}\nIt is straightforward to verify that this set is also a subspace of V . If U ∩W = {0}, the sum is said",
+    "source": "Maths for ML.pdf (chunk 32)"
+  },
+  {
+    "content": "to be a direct sum and written U ⊕W. Every vector in U ⊕W can be written uniquely as u + w\nfor some u ∈U and w ∈W. (This is both a necessary and suﬃcient condition for a direct sum.)\nThe dimensions of sums of subspaces obey a friendly relationship (see [4] for proof):\ndim(U + W) = dim U + dim W −dim(U ∩W)\nIt follows that\ndim(U ⊕W) = dim U + dim W\nsince dim(U ∩W) = dim({0}) = 0 if the sum is direct.\n3.2\nLinear maps",
+    "source": "Maths for ML.pdf (chunk 33)"
+  },
+  {
+    "content": "dim(U ⊕W) = dim U + dim W\nsince dim(U ∩W) = dim({0}) = 0 if the sum is direct.\n3.2\nLinear maps\nA linear map is a function T : V →W, where V and W are vector spaces, that satisﬁes\n(i) T(x + y) = Tx + Ty for all x, y ∈V\n(ii) T(αx) = αTx for all x ∈V, α ∈R\n7\nThe standard notational convention for linear maps (which we follow here) is to drop unnecessary\nparentheses, writing Tx rather than T(x) if there is no risk of ambiguity, and denote composition\nof linear maps by ST rather than the usual S ◦T.",
+    "source": "Maths for ML.pdf (chunk 34)"
+  },
+  {
+    "content": "of linear maps by ST rather than the usual S ◦T.\nA linear map from V to itself is called a linear operator.\nObserve that the deﬁnition of a linear map is suited to reﬂect the structure of vector spaces, since it\npreserves vector spaces’ two main operations, addition and scalar multiplication. In algebraic terms,\na linear map is called a homomorphism of vector spaces. An invertible homomorphism (where the",
+    "source": "Maths for ML.pdf (chunk 35)"
+  },
+  {
+    "content": "a linear map is called a homomorphism of vector spaces. An invertible homomorphism (where the\ninverse is also a homomorphism) is called an isomorphism. If there exists an isomorphism from V\nto W, then V and W are said to be isomorphic, and we write V ∼= W. Isomorphic vector spaces\nare essentially “the same” in terms of their algebraic structure. It is an interesting fact that ﬁnite-\ndimensional vector spaces2 of the same dimension are always isomorphic; if V, W are real vector",
+    "source": "Maths for ML.pdf (chunk 36)"
+  },
+  {
+    "content": "dimensional vector spaces2 of the same dimension are always isomorphic; if V, W are real vector\nspaces with dim V = dim W = n, then we have the natural isomorphism\nϕ : V →W\nα1v1 + · · · + αnvn 7→α1w1 + · · · + αnwn\nwhere v1, . . . , vn and w1, . . . , wn are any bases for V and W. This map is well-deﬁned because every\nvector in V can be expressed uniquely as a linear combination of v1, . . . , vn. It is straightforward",
+    "source": "Maths for ML.pdf (chunk 37)"
+  },
+  {
+    "content": "to verify that ϕ is an isomorphism, so in fact V ∼= W. In particular, every real n-dimensional vector\nspace is isomorphic to Rn.\n3.2.1\nThe matrix of a linear map\nVector spaces are fairly abstract. To represent and manipulate vectors and linear maps on a com-\nputer, we use rectangular arrays of numbers known as matrices.\nSuppose V and W are ﬁnite-dimensional vector spaces with bases v1, . . . , vn and w1, . . . , wm, respec-",
+    "source": "Maths for ML.pdf (chunk 38)"
+  },
+  {
+    "content": "tively, and T : V →W is a linear map. Then the matrix of T, with entries Aij where i = 1, . . . , m,\nj = 1, . . . , n, is deﬁned by\nTvj = A1jw1 + · · · + Amjwm\nThat is, the jth column of A consists of the coordinates of Tvj in the chosen basis for W.\nConversely, every matrix A ∈Rm×n induces a linear map T : Rn →Rm given by\nTx = Ax\nand the matrix of this map with respect to the standard bases of Rn and Rm is of course simply A.",
+    "source": "Maths for ML.pdf (chunk 39)"
+  },
+  {
+    "content": "and the matrix of this map with respect to the standard bases of Rn and Rm is of course simply A.\nIf A ∈Rm×n, its transpose A⊤∈Rn×m is given by (A⊤)ij = Aji for each (i, j). In other words,\nthe columns of A become the rows of A⊤, and the rows of A become the columns of A⊤.\nThe transpose has several nice algebraic properties that can be easily veriﬁed from the deﬁnition:\n(i) (A⊤)⊤= A\n(ii) (A + B)⊤= A⊤+ B⊤\n(iii) (αA)⊤= αA⊤\n(iv) (AB)⊤= B⊤A⊤\n2 over the same ﬁeld\n8\n3.2.2\nNullspace, range",
+    "source": "Maths for ML.pdf (chunk 40)"
+  },
+  {
+    "content": "(iii) (αA)⊤= αA⊤\n(iv) (AB)⊤= B⊤A⊤\n2 over the same ﬁeld\n8\n3.2.2\nNullspace, range\nSome of the most important subspaces are those induced by linear maps. If T : V →W is a linear\nmap, we deﬁne the nullspace3 of T as\nnull(T) = {v ∈V | Tv = 0}\nand the range of T as\nrange(T) = {w ∈W | ∃v ∈V such that Tv = w}\nIt is a good exercise to verify that the nullspace and range of a linear map are always subspaces of\nits domain and codomain, respectively.",
+    "source": "Maths for ML.pdf (chunk 41)"
+  },
+  {
+    "content": "its domain and codomain, respectively.\nThe columnspace of a matrix A ∈Rm×n is the span of its columns (considered as vectors in Rm),\nand similarly the rowspace of A is the span of its rows (considered as vectors in Rn). It is not\nhard to see that the columnspace of A is exactly the range of the linear map from Rn to Rm which\nis induced by A, so we denote it by range(A) in a slight abuse of notation. Similarly, the rowspace\nis denoted range(A⊤).",
+    "source": "Maths for ML.pdf (chunk 42)"
+  },
+  {
+    "content": "is denoted range(A⊤).\nIt is a remarkable fact that the dimension of the columnspace of A is the same as the dimension of\nthe rowspace of A. This quantity is called the rank of A, and deﬁned as\nrank(A) = dim range(A)\n3.3\nMetric spaces\nMetrics generalize the notion of distance from Euclidean space (although metric spaces need not be\nvector spaces).\nA metric on a set S is a function d : S × S →R that satisﬁes\n(i) d(x, y) ≥0, with equality if and only if x = y\n(ii) d(x, y) = d(y, x)",
+    "source": "Maths for ML.pdf (chunk 43)"
+  },
+  {
+    "content": "(i) d(x, y) ≥0, with equality if and only if x = y\n(ii) d(x, y) = d(y, x)\n(iii) d(x, z) ≤d(x, y) + d(y, z) (the so-called triangle inequality)\nfor all x, y, z ∈S.\nA key motivation for metrics is that they allow limits to be deﬁned for mathematical objects other\nthan real numbers. We say that a sequence {xn} ⊆S converges to the limit x if for any ϵ > 0, there\nexists N ∈N such that d(xn, x) < ϵ for all n ≥N. Note that the deﬁnition for limits of sequences of",
+    "source": "Maths for ML.pdf (chunk 44)"
+  },
+  {
+    "content": "exists N ∈N such that d(xn, x) < ϵ for all n ≥N. Note that the deﬁnition for limits of sequences of\nreal numbers, which you have likely seen in a calculus class, is a special case of this deﬁnition when\nusing the metric d(x, y) = |x −y|.\n3.4\nNormed spaces\nNorms generalize the notion of length from Euclidean space.\nA norm on a real vector space V is a function ∥· ∥: V →R that satisﬁes\n3 It is sometimes called the kernel by algebraists, but we eschew this terminology because the word “kernel” has",
+    "source": "Maths for ML.pdf (chunk 45)"
+  },
+  {
+    "content": "another meaning in machine learning.\n9\n(i) ∥x∥≥0, with equality if and only if x = 0\n(ii) ∥αx∥= |α|∥x∥\n(iii) ∥x + y∥≤∥x∥+ ∥y∥(the triangle inequality again)\nfor all x, y ∈V and all α ∈R. A vector space endowed with a norm is called a normed vector\nspace, or simply a normed space.\nNote that any norm on V induces a distance metric on V :\nd(x, y) = ∥x −y∥\nOne can verify that the axioms for metrics are satisﬁed under this deﬁnition and follow directly from",
+    "source": "Maths for ML.pdf (chunk 46)"
+  },
+  {
+    "content": "the axioms for norms. Therefore any normed space is also a metric space.4\nWe will typically only be concerned with a few speciﬁc norms on Rn:\n∥x∥1 =\nn\nX\ni=1\n|xi|\n∥x∥2 =\nv\nu\nu\nt\nn\nX\ni=1\nx2\ni\n∥x∥p =\n\n\nn\nX\ni=1\n|xi|p\n\n\n1\np\n(p ≥1)\n∥x∥∞= max\n1≤i≤n |xi|\nNote that the 1- and 2-norms are special cases of the p-norm, and the ∞-norm is the limit of the\np-norm as p tends to inﬁnity. We require p ≥1 for the general deﬁnition of the p-norm because the",
+    "source": "Maths for ML.pdf (chunk 47)"
+  },
+  {
+    "content": "p-norm as p tends to inﬁnity. We require p ≥1 for the general deﬁnition of the p-norm because the\ntriangle inequality fails to hold if p < 1. (Try to ﬁnd a counterexample!)\nHere’s a fun fact: for any given ﬁnite-dimensional vector space V , all norms on V are equivalent in\nthe sense that for two norms ∥· ∥A, ∥· ∥B, there exist constants α, β > 0 such that\nα∥x∥A ≤∥x∥B ≤β∥x∥A\nfor all x ∈V . Therefore convergence in one norm implies convergence in any other norm. This rule",
+    "source": "Maths for ML.pdf (chunk 48)"
+  },
+  {
+    "content": "for all x ∈V . Therefore convergence in one norm implies convergence in any other norm. This rule\nmay not apply in inﬁnite-dimensional vector spaces such as function spaces, though.\n3.5\nInner product spaces\nAn inner product on a real vector space V is a function ⟨·, ·⟩: V × V →R satisfying\n(i) ⟨x, x⟩≥0, with equality if and only if x = 0\n(ii) Linearity in the ﬁrst slot: ⟨x + y, z⟩= ⟨x, z⟩+ ⟨y, z⟩and ⟨αx, y⟩= α⟨x, y⟩\n(iii) ⟨x, y⟩= ⟨y, x⟩",
+    "source": "Maths for ML.pdf (chunk 49)"
+  },
+  {
+    "content": "(iii) ⟨x, y⟩= ⟨y, x⟩\n4 If a normed space is complete with respect to the distance metric induced by its norm, we say that it is a Banach\nspace.\n10\nfor all x, y, z ∈V and all α ∈R. A vector space endowed with an inner product is called an inner\nproduct space.\nNote that any inner product on V induces a norm on V :\n∥x∥=\np\n⟨x, x⟩\nOne can verify that the axioms for norms are satisﬁed under this deﬁnition and follow (almost)",
+    "source": "Maths for ML.pdf (chunk 50)"
+  },
+  {
+    "content": "One can verify that the axioms for norms are satisﬁed under this deﬁnition and follow (almost)\ndirectly from the axioms for inner products. Therefore any inner product space is also a normed\nspace (and hence also a metric space).5\nTwo vectors x and y are said to be orthogonal if ⟨x, y⟩= 0; we write x ⊥y for shorthand.\nOrthogonality generalizes the notion of perpendicularity from Euclidean space. If two orthogonal",
+    "source": "Maths for ML.pdf (chunk 51)"
+  },
+  {
+    "content": "Orthogonality generalizes the notion of perpendicularity from Euclidean space. If two orthogonal\nvectors x and y additionally have unit length (i.e. ∥x∥= ∥y∥= 1), then they are described as\northonormal.\nThe standard inner product on Rn is given by\n⟨x, y⟩=\nn\nX\ni=1\nxiyi = x⊤y\nThe matrix notation on the righthand side arises because this inner product is a special case of\nmatrix multiplication where we regard the resulting 1 × 1 matrix as a scalar. The inner product on",
+    "source": "Maths for ML.pdf (chunk 52)"
+  },
+  {
+    "content": "matrix multiplication where we regard the resulting 1 × 1 matrix as a scalar. The inner product on\nRn is also often written x · y (hence the alternate name dot product). The reader can verify that\nthe two-norm ∥· ∥2 on Rn is induced by this inner product.\n3.5.1\nPythagorean Theorem\nThe well-known Pythagorean theorem generalizes naturally to arbitrary inner product spaces.\nTheorem 1. If x ⊥y, then\n∥x + y∥2 = ∥x∥2 + ∥y∥2\nProof. Suppose x ⊥y, i.e. ⟨x, y⟩= 0. Then",
+    "source": "Maths for ML.pdf (chunk 53)"
+  },
+  {
+    "content": "Theorem 1. If x ⊥y, then\n∥x + y∥2 = ∥x∥2 + ∥y∥2\nProof. Suppose x ⊥y, i.e. ⟨x, y⟩= 0. Then\n∥x + y∥2 = ⟨x + y, x + y⟩= ⟨x, x⟩+ ⟨y, x⟩+ ⟨x, y⟩+ ⟨y, y⟩= ∥x∥2 + ∥y∥2\nas claimed.\n3.5.2\nCauchy-Schwarz inequality\nThis inequality is sometimes useful in proving bounds:\n|⟨x, y⟩| ≤∥x∥∥y∥\nfor all x, y ∈V .\nEquality holds exactly when x and y are scalar multiples of each other (or\nequivalently, when they are linearly dependent).",
+    "source": "Maths for ML.pdf (chunk 54)"
+  },
+  {
+    "content": "equivalently, when they are linearly dependent).\n5 If an inner product space is complete with respect to the distance metric induced by its inner product, we say\nthat it is a Hilbert space.\n11\n3.5.3\nOrthogonal complements and projections\nIf S ⊆V where V is an inner product space, then the orthogonal complement of S, denoted S⊥,\nis the set of all vectors in V that are orthogonal to every element of S:\nS⊥= {v ∈V | v ⊥s for all s ∈S}",
+    "source": "Maths for ML.pdf (chunk 55)"
+  },
+  {
+    "content": "S⊥= {v ∈V | v ⊥s for all s ∈S}\nIt is easy to verify that S⊥is a subspace of V for any S ⊆V . Note that there is no requirement\nthat S itself be a subspace of V . However, if S is a (ﬁnite-dimensional) subspace of V , we have the\nfollowing important decomposition.\nProposition 1. Let V be an inner product space and S be a ﬁnite-dimensional subspace of V . Then\nevery v ∈V can be written uniquely in the form\nv = vS + v⊥\nwhere vS ∈S and v⊥∈S⊥.",
+    "source": "Maths for ML.pdf (chunk 56)"
+  },
+  {
+    "content": "every v ∈V can be written uniquely in the form\nv = vS + v⊥\nwhere vS ∈S and v⊥∈S⊥.\nProof. Let u1, . . . , um be an orthonormal basis for S, and suppose v ∈V . Deﬁne\nvS = ⟨v, u1⟩u1 + · · · + ⟨v, um⟩um\nand\nv⊥= v −vS\nIt is clear that vS ∈S since it is in the span of the chosen basis. We also have, for all i = 1, . . . , m,\n⟨v⊥, ui⟩=",
+    "source": "Maths for ML.pdf (chunk 57)"
+  },
+  {
+    "content": "v −(⟨v, u1⟩u1 + · · · + ⟨v, um⟩um), ui\n\u000b\n= ⟨v, ui⟩−⟨v, u1⟩⟨u1, ui⟩−· · · −⟨v, um⟩⟨um, ui⟩\n= ⟨v, ui⟩−⟨v, ui⟩\n= 0\nwhich implies v⊥∈S⊥.\nIt remains to show that this decomposition is unique, i.e. doesn’t depend on the choice of basis. To\nthis end, let u′\n1, . . . , u′\nm be another orthonormal basis for S, and deﬁne v′\nS and v′\n⊥analogously. We\nclaim that v′\nS = vS and v′\n⊥= v⊥.\nBy deﬁnition,\nvS + v⊥= v = v′\nS + v′\n⊥\nso\nvS −v′\nS\n|\n{z\n}\n∈S\n= v′\n⊥−v⊥\n|\n{z\n}\n∈S⊥",
+    "source": "Maths for ML.pdf (chunk 58)"
+  },
+  {
+    "content": "⊥= v⊥.\nBy deﬁnition,\nvS + v⊥= v = v′\nS + v′\n⊥\nso\nvS −v′\nS\n|\n{z\n}\n∈S\n= v′\n⊥−v⊥\n|\n{z\n}\n∈S⊥\nFrom the orthogonality of these subspaces, we have\n0 = ⟨vS −v′\nS, v′\n⊥−v⊥⟩= ⟨vS −v′\nS, vS −v′\nS⟩= ∥vS −v′\nS∥2\nIt follows that vS −v′\nS = 0, i.e. vS = v′\nS. Then v′\n⊥= v −v′\nS = v −vS = v⊥as well.\nThe existence and uniqueness of the decomposition above mean that\nV = S ⊕S⊥\nwhenever S is a subspace.\n12\nSince the mapping from v to vS in the decomposition above always exists and is unique, we have a",
+    "source": "Maths for ML.pdf (chunk 59)"
+  },
+  {
+    "content": "12\nSince the mapping from v to vS in the decomposition above always exists and is unique, we have a\nwell-deﬁned function\nPS : V →S\nv 7→vS\nwhich is called the orthogonal projection onto S. We give the most important properties of this\nfunction below.\nProposition 2. Let S be a ﬁnite-dimensional subspace of V . Then\n(i) For any v ∈V and orthonormal basis u1, . . . , um of S,\nPSv = ⟨v, u1⟩u1 + · · · + ⟨v, um⟩um\n(ii) For any v ∈V , v −PSv ⊥S.\n(iii) PS is a linear map.",
+    "source": "Maths for ML.pdf (chunk 60)"
+  },
+  {
+    "content": "PSv = ⟨v, u1⟩u1 + · · · + ⟨v, um⟩um\n(ii) For any v ∈V , v −PSv ⊥S.\n(iii) PS is a linear map.\n(iv) PS is the identity when restricted to S (i.e. PSs = s for all s ∈S).\n(v) range(PS) = S and null(PS) = S⊥.\n(vi) P 2\nS = PS.\n(vii) For any v ∈V , ∥PSv∥≤∥v∥.\n(viii) For any v ∈V and s ∈S,\n∥v −PSv∥≤∥v −s∥\nwith equality if and only if s = PSv. That is,\nPSv = arg min\ns∈S\n∥v −s∥\nProof. The ﬁrst two statements are immediate from the deﬁnition of PS and the work done in the",
+    "source": "Maths for ML.pdf (chunk 61)"
+  },
+  {
+    "content": "Proof. The ﬁrst two statements are immediate from the deﬁnition of PS and the work done in the\nproof of the previous proposition.\nIn this proof, we abbreviate P = PS for brevity.\n(iii) Suppose x, y ∈V and α ∈R. Write x = xS + x⊥and y = yS + y⊥, where xS, yS ∈S and\nx⊥, y⊥∈S⊥. Then\nx + y = xS + yS\n|\n{z\n}\n∈S\n+ x⊥+ y⊥\n|\n{z\n}\n∈S⊥\nso P(x + y) = xS + yS = Px + Py, and\nαx = αxS\n|{z}\n∈S\n+ αx⊥\n|{z}\n∈S⊥\nso P(αx) = αxS = αPx. Thus P is linear.",
+    "source": "Maths for ML.pdf (chunk 62)"
+  },
+  {
+    "content": "αx = αxS\n|{z}\n∈S\n+ αx⊥\n|{z}\n∈S⊥\nso P(αx) = αxS = αPx. Thus P is linear.\n(iv) If s ∈S, then we can write s = s + 0 where s ∈S and 0 ∈S⊥, so Ps = s.\n13\n(v) range(P) ⊆S: By deﬁnition.\nrange(P) ⊇S: Using the previous result, any s ∈S satisﬁes s = Pv for some v ∈V (speciﬁ-\ncally, v = s).\nnull(P) ⊆S⊥: Suppose v ∈null(P). Write v = vS + v⊥where vS ∈S and v⊥∈S⊥. Then\n0 = Pv = vS, so v = v⊥∈S⊥.\nnull(P) ⊇S⊥: If v ∈S⊥, then v = 0 + v where 0 ∈S and v ∈S⊥, so Pv = 0.\n(vi) For any v ∈V ,\nP 2v = P(Pv) = Pv",
+    "source": "Maths for ML.pdf (chunk 63)"
+  },
+  {
+    "content": "(vi) For any v ∈V ,\nP 2v = P(Pv) = Pv\nsince Pv ∈S and P is the identity on S. Hence P 2 = P.\n(vii) Suppose v ∈V . Then by the Pythagorean theorem,\n∥v∥2 = ∥Pv + (v −Pv)∥2 = ∥Pv∥2 + ∥v −Pv∥2 ≥∥Pv∥2\nThe result follows by taking square roots.\n(viii) Suppose v ∈V and s ∈S. Then by the Pythagorean theorem,-\n∥v −s∥2 = ∥(v −Pv) + (Pv −s)∥2 = ∥v −Pv∥2 + ∥Pv −s∥2 ≥∥v −Pv∥2\nWe obtain ∥v −s∥≥∥v −Pv∥by taking square roots. Equality holds iﬀ∥Pv −s∥2 = 0, which\nis true iﬀPv = s.",
+    "source": "Maths for ML.pdf (chunk 64)"
+  },
+  {
+    "content": "is true iﬀPv = s.\nAny linear map P that satisﬁes P 2 = P is called a projection, so we have shown that PS is a\nprojection (hence the name).\nThe last part of the previous result shows that orthogonal projection solves the optimization problem\nof ﬁnding the closest point in S to a given v ∈V . This makes intuitive sense from a pictorial\nrepresentation of the orthogonal projection:\nLet us now consider the speciﬁc case where S is a subspace of Rn with orthonormal basis u1, . . . , um.\nThen\nPSx =\nm",
+    "source": "Maths for ML.pdf (chunk 65)"
+  },
+  {
+    "content": "Then\nPSx =\nm\nX\ni=1\n⟨x, ui⟩ui =\nm\nX\ni=1\nx⊤uiui =\nm\nX\ni=1\nuiu⊤\nix =\n\n\nm\nX\ni=1\nuiu⊤\ni\n\nx\n14\nso the operator PS can be expressed as a matrix\nPS =\nm\nX\ni=1\nuiu⊤\ni = UU⊤\nwhere U has u1, . . . , um as its columns. Here we have used the sum-of-outer-products identity.\n3.6\nEigenthings\nFor a square matrix A ∈Rn×n, there may be vectors which, when A is applied to them, are simply\nscaled by some constant. We say that a nonzero vector x ∈Rn is an eigenvector of A corresponding\nto eigenvalue λ if\nAx = λx",
+    "source": "Maths for ML.pdf (chunk 66)"
+  },
+  {
+    "content": "to eigenvalue λ if\nAx = λx\nThe zero vector is excluded from this deﬁnition because A0 = 0 = λ0 for every λ.\nWe now give some useful results about how eigenvalues change after various manipulations.\nProposition 3. Let x be an eigenvector of A with corresponding eigenvalue λ. Then\n(i) For any γ ∈R, x is an eigenvector of A + γI with eigenvalue λ + γ.\n(ii) If A is invertible, then x is an eigenvector of A−1 with eigenvalue λ−1.\n(iii) Akx = λkx for any k ∈Z (where A0 = I by deﬁnition).",
+    "source": "Maths for ML.pdf (chunk 67)"
+  },
+  {
+    "content": "(iii) Akx = λkx for any k ∈Z (where A0 = I by deﬁnition).\nProof. (i) follows readily:\n(A + γI)x = Ax + γIx = λx + γx = (λ + γ)x\n(ii) Suppose A is invertible. Then\nx = A−1Ax = A−1(λx) = λA−1x\nDividing by λ, which is valid because the invertibility of A implies λ ̸= 0, gives λ−1x = A−1x.\n(iii) The case k ≥0 follows immediately by induction on k. Then the general case k ∈Z follows by\ncombining the k ≥0 case with (ii).\n3.7\nTrace\nThe trace of a square matrix is the sum of its diagonal entries:",
+    "source": "Maths for ML.pdf (chunk 68)"
+  },
+  {
+    "content": "3.7\nTrace\nThe trace of a square matrix is the sum of its diagonal entries:\ntr(A) =\nn\nX\ni=1\nAii\nThe trace has several nice algebraic properties:\n(i) tr(A + B) = tr(A) + tr(B)\n(ii) tr(αA) = α tr(A)\n(iii) tr(A⊤) = tr(A)\n15\n(iv) tr(ABCD) = tr(BCDA) = tr(CDAB) = tr(DABC)\nThe ﬁrst three properties follow readily from the deﬁnition.\nThe last is known as invariance\nunder cyclic permutations. Note that the matrices cannot be reordered arbitrarily, for example\ntr(ABCD) ̸= tr(BACD) in general.",
+    "source": "Maths for ML.pdf (chunk 69)"
+  },
+  {
+    "content": "tr(ABCD) ̸= tr(BACD) in general.\nAlso, there is nothing special about the product of four\nmatrices – analogous rules hold for more or fewer matrices.\nInterestingly, the trace of a matrix is equal to the sum of its eigenvalues (repeated according to\nmultiplicity):\ntr(A) =\nX\ni\nλi(A)\n3.8\nDeterminant\nThe determinant of a square matrix can be deﬁned in several diﬀerent confusing ways, none of\nwhich are particularly important for our purposes; go look at an introductory linear algebra text (or",
+    "source": "Maths for ML.pdf (chunk 70)"
+  },
+  {
+    "content": "Wikipedia) if you need a deﬁnition. But it’s good to know the properties:\n(i) det(I) = 1\n(ii) det\n\u0000A⊤\u0001\n= det(A)\n(iii) det(AB) = det(A) det(B)\n(iv) det\n\u0000A−1\u0001\n= det(A)−1\n(v) det(αA) = αn det(A)\nInterestingly, the determinant of a matrix is equal to the product of its eigenvalues (repeated ac-\ncording to multiplicity):\ndet(A) =\nY\ni\nλi(A)\n3.9\nOrthogonal matrices\nA matrix Q ∈Rn×n is said to be orthogonal if its columns are pairwise orthonormal. This deﬁnition\nimplies that\nQ⊤Q = QQ⊤= I",
+    "source": "Maths for ML.pdf (chunk 71)"
+  },
+  {
+    "content": "implies that\nQ⊤Q = QQ⊤= I\nor equivalently, Q⊤= Q−1. A nice thing about orthogonal matrices is that they preserve inner\nproducts:\n(Qx)⊤(Qy) = x⊤Q⊤Qy = x⊤Iy = x⊤y\nA direct result of this fact is that they also preserve 2-norms:\n∥Qx∥2 =\nq\n(Qx)⊤(Qx) =\n√\nx⊤x = ∥x∥2\nTherefore multiplication by an orthogonal matrix can be considered as a transformation that pre-\nserves length, but may rotate or reﬂect the vector about the origin.\n16\n3.10\nSymmetric matrices",
+    "source": "Maths for ML.pdf (chunk 72)"
+  },
+  {
+    "content": "serves length, but may rotate or reﬂect the vector about the origin.\n16\n3.10\nSymmetric matrices\nA matrix A ∈Rn×n is said to be symmetric if it is equal to its own transpose (A = A⊤), meaning\nthat Aij = Aji for all (i, j). This deﬁnition seems harmless enough but turns out to have some\nstrong implications. We summarize the most important of these as\nTheorem 2. (Spectral Theorem) If A ∈Rn×n is symmetric, then there exists an orthonormal basis\nfor Rn consisting of eigenvectors of A.",
+    "source": "Maths for ML.pdf (chunk 73)"
+  },
+  {
+    "content": "for Rn consisting of eigenvectors of A.\nThe practical application of this theorem is a particular factorization of symmetric matrices, re-\nferred to as the eigendecomposition or spectral decomposition. Denote the orthonormal basis\nof eigenvectors q1, . . . , qn and their eigenvalues λ1, . . . , λn. Let Q be an orthogonal matrix with\nq1, . . . , qn as its columns, and Λ = diag(λ1, . . . , λn). Since by deﬁnition Aqi = λiqi for every i, the\nfollowing relationship holds:\nAQ = QΛ",
+    "source": "Maths for ML.pdf (chunk 74)"
+  },
+  {
+    "content": "following relationship holds:\nAQ = QΛ\nRight-multiplying by Q⊤, we arrive at the decomposition\nA = QΛQ⊤\n3.10.1\nRayleigh quotients\nLet A ∈Rn×n be a symmetric matrix. The expression x⊤Ax is called a quadratic form.\nThere turns out to be an interesting connection between the quadratic form of a symmetric matrix\nand its eigenvalues. This connection is provided by the Rayleigh quotient\nRA(x) = x⊤Ax\nx⊤x\nThe Rayleigh quotient has a couple of important properties which the reader can (and should!)",
+    "source": "Maths for ML.pdf (chunk 75)"
+  },
+  {
+    "content": "x⊤x\nThe Rayleigh quotient has a couple of important properties which the reader can (and should!)\neasily verify from the deﬁnition:\n(i) Scale invariance: for any vector x ̸= 0 and any scalar α ̸= 0, RA(x) = RA(αx).\n(ii) If x is an eigenvector of A with eigenvalue λ, then RA(x) = λ.\nWe can further show that the Rayleigh quotient is bounded by the largest and smallest eigenvalues\nof A. But ﬁrst we will show a useful special case of the ﬁnal result.\nProposition 4. For any x such that ∥x∥2 = 1,",
+    "source": "Maths for ML.pdf (chunk 76)"
+  },
+  {
+    "content": "Proposition 4. For any x such that ∥x∥2 = 1,\nλmin(A) ≤x⊤Ax ≤λmax(A)\nwith equality if and only if x is a corresponding eigenvector.\nProof. We show only the max case because the argument for the min case is entirely analogous.\nSince A is symmetric, we can decompose it as A = QΛQ⊤. Then use the change of variable y = Q⊤x,\nnoting that the relationship between x and y is one-to-one and that ∥y∥2 = 1 since Q is orthogonal.\nHence\nmax\n∥x∥2=1 x⊤Ax = max\n∥y∥2=1 y⊤Λy =\nmax\ny2\n1+···+y2\nn=1\nn\nX\ni=1\nλiy2\ni",
+    "source": "Maths for ML.pdf (chunk 77)"
+  },
+  {
+    "content": "Hence\nmax\n∥x∥2=1 x⊤Ax = max\n∥y∥2=1 y⊤Λy =\nmax\ny2\n1+···+y2\nn=1\nn\nX\ni=1\nλiy2\ni\nWritten this way, it is clear that y maximizes this expression exactly if and only if it satisﬁes\nP\ni∈I y2\ni = 1 where I = {i : λi = maxj=1,...,n λj = λmax(A)} and yj = 0 for j ̸∈I.\nThat is,\n17\nI contains the index or indices of the largest eigenvalue. In this case, the maximal value of the\nexpression is\nn\nX\ni=1\nλiy2\ni =\nX\ni∈I\nλiy2\ni = λmax(A)\nX\ni∈I\ny2\ni = λmax(A)",
+    "source": "Maths for ML.pdf (chunk 78)"
+  },
+  {
+    "content": "expression is\nn\nX\ni=1\nλiy2\ni =\nX\ni∈I\nλiy2\ni = λmax(A)\nX\ni∈I\ny2\ni = λmax(A)\nThen writing q1, . . . , qn for the columns of Q, we have\nx = QQ⊤x = Qy =\nn\nX\ni=1\nyiqi =\nX\ni∈I\nyiqi\nwhere we have used the matrix-vector product identity.\nRecall that q1, . . . , qn are eigenvectors of A and form an orthonormal basis for Rn. Therefore by\nconstruction, the set {qi : i ∈I} forms an orthonormal basis for the eigenspace of λmax(A). Hence",
+    "source": "Maths for ML.pdf (chunk 79)"
+  },
+  {
+    "content": "construction, the set {qi : i ∈I} forms an orthonormal basis for the eigenspace of λmax(A). Hence\nx, which is a linear combination of these, lies in that eigenspace and thus is an eigenvector of A\ncorresponding to λmax(A).\nWe have shown that max∥x∥2=1 x⊤Ax = λmax(A), from which we have the general inequality x⊤Ax ≤\nλmax(A) for all unit-length x.\nBy the scale invariance of the Rayleigh quotient, we immediately have as a corollary (since x⊤Ax =\nRA(x) for unit x)",
+    "source": "Maths for ML.pdf (chunk 80)"
+  },
+  {
+    "content": "RA(x) for unit x)\nTheorem 3. (Min-max theorem) For all x ̸= 0,\nλmin(A) ≤RA(x) ≤λmax(A)\nwith equality if and only if x is a corresponding eigenvector.\nThis is sometimes referred to as a variational characterization of eigenvalues because it ex-\npresses the smallest/largest eigenvalue of A in terms of a minimization/maximization problem:\nλmin / max(A) = min\nx̸=0 / max\nx̸=0 RA(x)\n3.11\nPositive (semi-)deﬁnite matrices",
+    "source": "Maths for ML.pdf (chunk 81)"
+  },
+  {
+    "content": "λmin / max(A) = min\nx̸=0 / max\nx̸=0 RA(x)\n3.11\nPositive (semi-)deﬁnite matrices\nA symmetric matrix A is positive semi-deﬁnite if for all x ∈Rn, x⊤Ax ≥0. Sometimes people\nwrite A ⪰0 to indicate that A is positive semi-deﬁnite.\nA symmetric matrix A is positive deﬁnite if for all nonzero x ∈Rn, x⊤Ax > 0. Sometimes people\nwrite A ≻0 to indicate that A is positive deﬁnite. Note that positive deﬁniteness is a strictly",
+    "source": "Maths for ML.pdf (chunk 82)"
+  },
+  {
+    "content": "write A ≻0 to indicate that A is positive deﬁnite. Note that positive deﬁniteness is a strictly\nstronger property than positive semi-deﬁniteness, in the sense that every positive deﬁnite matrix is\npositive semi-deﬁnite but not vice-versa.\nThese properties are related to eigenvalues in the following way.\nProposition 5. A symmetric matrix is positive semi-deﬁnite if and only if all of its eigenvalues are\nnonnegative, and positive deﬁnite if and only if all of its eigenvalues are positive.",
+    "source": "Maths for ML.pdf (chunk 83)"
+  },
+  {
+    "content": "nonnegative, and positive deﬁnite if and only if all of its eigenvalues are positive.\nProof. Suppose A is positive semi-deﬁnite, and let x be an eigenvector of A with eigenvalue λ. Then\n0 ≤x⊤Ax = x⊤(λx) = λx⊤x = λ∥x∥2\n2\n18\nSince x ̸= 0 (by the assumption that it is an eigenvector), we have ∥x∥2\n2 > 0, so we can divide both\nsides by ∥x∥2\n2 to arrive at λ ≥0. If A is positive deﬁnite, the inequality above holds strictly, so\nλ > 0. This proves one direction.",
+    "source": "Maths for ML.pdf (chunk 84)"
+  },
+  {
+    "content": "λ > 0. This proves one direction.\nTo simplify the proof of the other direction, we will use the machinery of Rayleigh quotients. Suppose\nthat A is symmetric and all its eigenvalues are nonnegative. Then for all x ̸= 0,\n0 ≤λmin(A) ≤RA(x)\nSince x⊤Ax matches RA(x) in sign, we conclude that A is positive semi-deﬁnite. If the eigenvalues\nof A are all strictly positive, then 0 < λmin(A), whence it follows that A is positive deﬁnite.\nAs an example of how these matrices arise, consider",
+    "source": "Maths for ML.pdf (chunk 85)"
+  },
+  {
+    "content": "As an example of how these matrices arise, consider\nProposition 6. Suppose A ∈Rm×n. Then A⊤A is positive semi-deﬁnite. If null(A) = {0}, then\nA⊤A is positive deﬁnite.\nProof. For any x ∈Rn,\nx⊤(A⊤A)x = (Ax)⊤(Ax) = ∥Ax∥2\n2 ≥0\nso A⊤A is positive semi-deﬁnite. If null(A) = {0}, then Ax ̸= 0 whenever x ̸= 0, so ∥Ax∥2\n2 > 0,\nand thus A⊤A is positive deﬁnite.\nPositive deﬁnite matrices are invertible (since their eigenvalues are nonzero), whereas positive semi-",
+    "source": "Maths for ML.pdf (chunk 86)"
+  },
+  {
+    "content": "deﬁnite matrices might not be. However, if you already have a positive semi-deﬁnite matrix, it is\npossible to perturb its diagonal slightly to produce a positive deﬁnite matrix.\nProposition 7. If A is positive semi-deﬁnite and ϵ > 0, then A + ϵI is positive deﬁnite.\nProof. Assuming A is positive semi-deﬁnite and ϵ > 0, we have for any x ̸= 0 that\nx⊤(A + ϵI)x = x⊤Ax + ϵx⊤Ix = x⊤Ax\n| {z }\n≥0\n+ ϵ∥x∥2\n2\n| {z }\n>0\n> 0\nas claimed.",
+    "source": "Maths for ML.pdf (chunk 87)"
+  },
+  {
+    "content": "x⊤(A + ϵI)x = x⊤Ax + ϵx⊤Ix = x⊤Ax\n| {z }\n≥0\n+ ϵ∥x∥2\n2\n| {z }\n>0\n> 0\nas claimed.\nAn obvious but frequently useful consequence of the two propositions we have just shown is that\nA⊤A + ϵI is positive deﬁnite (and in particular, invertible) for any matrix A and any ϵ > 0.\n3.11.1\nThe geometry of positive deﬁnite quadratic forms\nA useful way to understand quadratic forms is by the geometry of their level sets. A level set or",
+    "source": "Maths for ML.pdf (chunk 88)"
+  },
+  {
+    "content": "A useful way to understand quadratic forms is by the geometry of their level sets. A level set or\nisocontour of a function is the set of all inputs such that the function applied to those inputs yields\na given output. Mathematically, the c-isocontour of f is {x ∈dom f : f(x) = c}.\nLet us consider the special case f(x) = x⊤Ax where A is a positive deﬁnite matrix. Since A is\npositive deﬁnite, it has a unique matrix square root A\n1\n2 = QΛ\n1\n2 Q⊤, where QΛQ⊤is the eigende-\ncomposition of A and Λ\n1",
+    "source": "Maths for ML.pdf (chunk 89)"
+  },
+  {
+    "content": "1\n2 = QΛ\n1\n2 Q⊤, where QΛQ⊤is the eigende-\ncomposition of A and Λ\n1\n2 = diag(√λ1, . . . √λn). It is easy to see that this matrix A\n1\n2 is positive\ndeﬁnite (consider its eigenvalues) and satisﬁes A\n1\n2 A\n1\n2 = A. Fixing a value c ≥0, the c-isocontour\nof f is the set of x ∈Rn such that\nc = x⊤Ax = x⊤A\n1\n2 A\n1\n2 x = ∥A\n1\n2 x∥2\n2\n19\nwhere we have used the symmetry of A\n1\n2 . Making the change of variable z = A\n1\n2 x, we have the",
+    "source": "Maths for ML.pdf (chunk 90)"
+  },
+  {
+    "content": "where we have used the symmetry of A\n1\n2 . Making the change of variable z = A\n1\n2 x, we have the\ncondition ∥z∥2 = √c. That is, the values z lie on a sphere of radius √c. These can be parameterized\nas z = √cˆz where ˆz has ∥ˆz∥2 = 1. Then since A−1\n2 = QΛ−1\n2 Q⊤, we have\nx = A−1\n2 z = QΛ−1\n2 Q⊤√cˆz = √cQΛ−1\n2 ˜z\nwhere ˜z = Q⊤ˆz also satisﬁes ∥˜z∥2 = 1 since Q is orthogonal. Using this parameterization, we see",
+    "source": "Maths for ML.pdf (chunk 91)"
+  },
+  {
+    "content": "where ˜z = Q⊤ˆz also satisﬁes ∥˜z∥2 = 1 since Q is orthogonal. Using this parameterization, we see\nthat the solution set {x ∈Rn : f(x) = c} is the image of the unit sphere {˜z ∈Rn : ∥˜z∥2 = 1} under\nthe invertible linear map x = √cQΛ−1\n2 ˜z.\nWhat we have gained with all these manipulations is a clear algebraic understanding of the c-\nisocontour of f in terms of a sequence of linear transformations applied to a well-understood set.\nWe begin with the unit sphere, then scale every axis i by λ\n−1\n2",
+    "source": "Maths for ML.pdf (chunk 92)"
+  },
+  {
+    "content": "We begin with the unit sphere, then scale every axis i by λ\n−1\n2\ni\n, resulting in an axis-aligned ellipsoid.\nObserve that the axis lengths of the ellipsoid are proportional to the inverse square roots of the\neigenvalues of A. Hence larger eigenvalues correspond to shorter axis lengths, and vice-versa.\nThen this axis-aligned ellipsoid undergoes a rigid transformation (i.e. one that preserves length and",
+    "source": "Maths for ML.pdf (chunk 93)"
+  },
+  {
+    "content": "angles, such as a rotation/reﬂection) given by Q. The result of this transformation is that the axes\nof the ellipse are no longer along the coordinate axes in general, but rather along the directions\ngiven by the corresponding eigenvectors. To see this, consider the unit vector ei ∈Rn that has\n[ei]j = δij. In the pre-transformed space, this vector points along the axis with length proportional\nto λ\n−1\n2\ni",
+    "source": "Maths for ML.pdf (chunk 94)"
+  },
+  {
+    "content": "to λ\n−1\n2\ni\n. But after applying the rigid transformation Q, the resulting vector points in the direction\nof the corresponding eigenvector qi, since\nQei =\nn\nX\nj=1\n[ei]jqj = qi\nwhere we have used the matrix-vector product identity from earlier.\nIn summary: the isocontours of f(x) = x⊤Ax are ellipsoids such that the axes point in the directions\nof the eigenvectors of A, and the radii of these axes are proportional to the inverse square roots of\nthe corresponding eigenvalues.\n3.12",
+    "source": "Maths for ML.pdf (chunk 95)"
+  },
+  {
+    "content": "the corresponding eigenvalues.\n3.12\nSingular value decomposition\nSingular value decomposition (SVD) is a widely applicable tool in linear algebra. Its strength stems\npartially from the fact that every matrix A ∈Rm×n has an SVD (even non-square matrices)! The\ndecomposition goes as follows:\nA = UΣV⊤\nwhere U ∈Rm×m and V ∈Rn×n are orthogonal matrices and Σ ∈Rm×n is a diagonal matrix with\nthe singular values of A (denoted σi) on its diagonal.",
+    "source": "Maths for ML.pdf (chunk 96)"
+  },
+  {
+    "content": "the singular values of A (denoted σi) on its diagonal.\nOnly the ﬁrst r = rank(A) singular values are nonzero, and by convention, they are in non-increasing\norder, i.e.\nσ1 ≥σ2 ≥· · · ≥σr > σr+1 = · · · = σmin(m,n) = 0\nAnother way to write the SVD (cf. the sum-of-outer-products identity) is\nA =\nr\nX\ni=1\nσiuiv⊤\ni\nwhere ui and vi are the ith columns of U and V, respectively.\n20\nObserve that the SVD factors provide eigendecompositions for A⊤A and AA⊤:\nA⊤A = (UΣV⊤)⊤UΣV⊤= VΣ⊤U⊤UΣV⊤= VΣ⊤ΣV⊤",
+    "source": "Maths for ML.pdf (chunk 97)"
+  },
+  {
+    "content": "A⊤A = (UΣV⊤)⊤UΣV⊤= VΣ⊤U⊤UΣV⊤= VΣ⊤ΣV⊤\nAA⊤= UΣV⊤(UΣV⊤)⊤= UΣV⊤VΣ⊤U⊤= UΣΣ⊤U⊤\nIt follows immediately that the columns of V (the right-singular vectors of A) are eigenvectors\nof A⊤A, and the columns of U (the left-singular vectors of A) are eigenvectors of AA⊤.\nThe matrices Σ⊤Σ and ΣΣ⊤are not necessarily the same size, but both are diagonal with the squared\nsingular values σ2\ni on the diagonal (plus possibly some zeros). Thus the singular values of A are the",
+    "source": "Maths for ML.pdf (chunk 98)"
+  },
+  {
+    "content": "i on the diagonal (plus possibly some zeros). Thus the singular values of A are the\nsquare roots of the eigenvalues of A⊤A (or equivalently, of AA⊤)6.\n3.13\nFundamental Theorem of Linear Algebra\nDespite its fancy name, the “Fundamental Theorem of Linear Algebra” is not a universally-agreed-\nupon theorem; there is some ambiguity as to exactly what statements it includes. The version we\npresent here is suﬃcient for our purposes.\nTheorem 4. If A ∈Rm×n, then\n(i) null(A) = range(A⊤)⊥",
+    "source": "Maths for ML.pdf (chunk 99)"
+  },
+  {
+    "content": "present here is suﬃcient for our purposes.\nTheorem 4. If A ∈Rm×n, then\n(i) null(A) = range(A⊤)⊥\n(ii) null(A) ⊕range(A⊤) = Rn\n(iii) dim range(A)\n|\n{z\n}\nrank(A)\n+ dim null(A) = n.7\n(iv) If A = UΣV⊤is the singular value decomposition of A, then the columns of U and V form\northonormal bases for the four “fundamental subspaces” of A:\nSubspace\nColumns\nrange(A)\nThe ﬁrst r columns of U\nrange(A⊤)\nThe ﬁrst r columns of V\nnull(A⊤)\nThe last m −r columns of U\nnull(A)\nThe last n −r columns of V",
+    "source": "Maths for ML.pdf (chunk 100)"
+  },
+  {
+    "content": "The ﬁrst r columns of V\nnull(A⊤)\nThe last m −r columns of U\nnull(A)\nThe last n −r columns of V\nwhere r = rank(A).\nProof.\n(i) Let a1, . . . , am denote the rows of A. Then\nx ∈null(A) ⇐⇒Ax = 0\n⇐⇒a⊤\nix = 0 for all i = 1, . . . , m\n⇐⇒(α1a1 + · · · + αmam)⊤x = 0 for all α1, . . . , αm\n⇐⇒v⊤x = 0 for all v ∈range(A⊤)\n⇐⇒x ∈range(A⊤)⊥\nwhich proves the result.\n6 Recall that A⊤A and AA⊤are positive semi-deﬁnite, so their eigenvalues are nonnegative, and thus taking square\nroots is always well-deﬁned.",
+    "source": "Maths for ML.pdf (chunk 101)"
+  },
+  {
+    "content": "roots is always well-deﬁned.\n7 This result is sometimes referred to by itself as the rank-nullity theorem.\n21\n(ii) Recall our previous result on orthogonal complements: if S is a ﬁnite-dimensional subspace\nof V , then V = S ⊕S⊥. Thus the claim follows from the previous part (take V = Rn and\nS = range(A⊤)).\n(iii) Recall that if U and W are subspaces of a ﬁnite-dimensional vector space V , then dim(U ⊕\nW) = dim U + dim W. Thus the claim follows from the previous part, using the fact that",
+    "source": "Maths for ML.pdf (chunk 102)"
+  },
+  {
+    "content": "W) = dim U + dim W. Thus the claim follows from the previous part, using the fact that\ndim range(A) = dim range(A⊤).\nA direct result of (ii) is that every x ∈Rn can be written (uniquely) in the form\nx = A⊤v + w\nfor some v ∈Rm, w ∈Rn, where Aw = 0.\nNote that there is some asymmetry in the theorem, but analogous statements can be obtained by\napplying the theorem to A⊤.\n3.14\nOperator and matrix norms\nIf V and W are vector spaces, then the set of linear maps from V to W forms another vector space,",
+    "source": "Maths for ML.pdf (chunk 103)"
+  },
+  {
+    "content": "If V and W are vector spaces, then the set of linear maps from V to W forms another vector space,\nand the norms deﬁned on V and W induce a norm on this space of linear maps. If T : V →W is a\nlinear map between normed spaces V and W, then the operator norm is deﬁned as\n∥T∥op = max\nx∈V\nx̸=0\n∥Tx∥W\n∥x∥V\nAn important class of this general deﬁnition is when the domain and codomain are Rn and Rm, and\nthe p-norm is used in both cases. Then for a matrix A ∈Rm×n, we can deﬁne the matrix p-norm\n∥A∥p = max",
+    "source": "Maths for ML.pdf (chunk 104)"
+  },
+  {
+    "content": "∥A∥p = max\nx̸=0\n∥Ax∥p\n∥x∥p\nIn the special cases p = 1, 2, ∞we have\n∥A∥1 = max\n1≤j≤n\nm\nX\ni=1\n|Aij|\n∥A∥∞= max\n1≤i≤m\nn\nX\nj=1\n|Aij|\n∥A∥2 = σ1(A)\nwhere σ1 denotes the largest singular value. Note that the induced 1- and ∞-norms are simply\nthe maximum absolute column and row sums, respectively. The induced 2-norm (often called the\nspectral norm) simpliﬁes to σ1 by the properties of Rayleigh quotients proved earlier; clearly\narg max\nx̸=0\n∥Ax∥2\n∥x∥2\n= arg max\nx̸=0\n∥Ax∥2\n2\n∥x∥2\n2\n= arg max\nx̸=0\nx⊤A⊤Ax",
+    "source": "Maths for ML.pdf (chunk 105)"
+  },
+  {
+    "content": "arg max\nx̸=0\n∥Ax∥2\n∥x∥2\n= arg max\nx̸=0\n∥Ax∥2\n2\n∥x∥2\n2\n= arg max\nx̸=0\nx⊤A⊤Ax\nx⊤x\nand we have seen that the rightmost expression is maximized by an eigenvector of A⊤A corresponding\nto its largest eigenvalue, λmax(A⊤A) = σ2\n1(A).\n22\nBy deﬁnition, these induced matrix norms have the important property that\n∥Ax∥p ≤∥A∥p∥x∥p\nfor any x. They are also submultiplicative in the following sense.\nProposition 8. ∥AB∥p ≤∥A∥p∥B∥p\nProof. For any x,\n∥ABx∥p ≤∥A∥p∥Bx∥p ≤∥A∥p∥B∥p∥x∥p\nso\n∥AB∥p = max\nx̸=0\n∥ABx∥\n∥x∥p",
+    "source": "Maths for ML.pdf (chunk 106)"
+  },
+  {
+    "content": "Proof. For any x,\n∥ABx∥p ≤∥A∥p∥Bx∥p ≤∥A∥p∥B∥p∥x∥p\nso\n∥AB∥p = max\nx̸=0\n∥ABx∥\n∥x∥p\n≤max\nx̸=0\n∥A∥p∥B∥p∥x∥p\n∥x∥p\n= ∥A∥p∥B∥p\nThese are not the only matrix norms, however. Another frequently used is the Frobenius norm\n∥A∥f =\nv\nu\nu\nt\nm\nX\ni=1\nn\nX\nj=1\nA2\nij =\nq\ntr(A⊤A) =\nv\nu\nu\nt\nmin(m,n)\nX\ni=1\nσ2\ni (A)\nThe ﬁrst equivalence follows straightforwardly by expanding the deﬁnitions of matrix multiplication\nand trace. For the second, observe that (writing A = UΣV⊤as before)",
+    "source": "Maths for ML.pdf (chunk 107)"
+  },
+  {
+    "content": "and trace. For the second, observe that (writing A = UΣV⊤as before)\ntr(A⊤A) = tr(VΣ⊤ΣV⊤) = tr(V⊤VΣ⊤Σ) = tr(Σ⊤Σ) =\nmin(m,n)\nX\ni=1\nσ2\ni (A)\nusing the cyclic property of trace and orthogonality of V.\nA matrix norm ∥· ∥is said to be unitary invariant if\n∥UAV∥= ∥A∥\nfor all orthogonal U and V of appropriate size. Unitary invariant norms essentially depend only on\nthe singular values of a matrix, since for such norms,\n∥A∥= ∥UΣV⊤∥= ∥Σ∥",
+    "source": "Maths for ML.pdf (chunk 108)"
+  },
+  {
+    "content": "the singular values of a matrix, since for such norms,\n∥A∥= ∥UΣV⊤∥= ∥Σ∥\nTwo particular norms we have seen, the spectral norm and the Frobenius norm, can be expressed\nsolely in terms of a matrix’s singular values.\nProposition 9. The spectral norm and the Frobenius norm are unitary invariant.\nProof. For the Frobenius norm, the claim follows from\ntr((UAV)⊤UAV) = tr(V⊤A⊤U⊤UAV) = tr(VV⊤A⊤A) = tr(A⊤A)\nFor the spectral norm, recall that ∥Ux∥2 = ∥x∥2 for any orthogonal U. Thus\n∥UAV∥2 = max\nx̸=0\n∥UAVx∥2",
+    "source": "Maths for ML.pdf (chunk 109)"
+  },
+  {
+    "content": "∥UAV∥2 = max\nx̸=0\n∥UAVx∥2\n∥x∥2\n= max\nx̸=0\n∥AVx∥2\n∥x∥2\n= max\ny̸=0\n∥Ay∥2\n∥y∥2\n= ∥A∥2\nwhere we have used the change of variable y = V⊤x, which satisﬁes ∥y∥2 = ∥x∥2. Since V⊤is\ninvertible, x and y are in one-to-one correspondence, and in particular y = 0 if and only if x = 0.\nHence maximizing over y ̸= 0 is equivalent to maximizing over x ̸= 0.\n23\n3.15\nLow-rank approximation\nAn important practical application of the SVD is to compute low-rank approximations to matri-",
+    "source": "Maths for ML.pdf (chunk 110)"
+  },
+  {
+    "content": "An important practical application of the SVD is to compute low-rank approximations to matri-\nces. That is, given some matrix, we want to ﬁnd another matrix of the same dimensions but lower\nrank such that the two matrices are close as measured by some norm. Such an approximation can be\nused to reduce the amount of data needed to store a matrix, while retaining most of its information.\nA remarkable result known as the Eckart-Young-Mirsky theorem tells us that the optimal matrix",
+    "source": "Maths for ML.pdf (chunk 111)"
+  },
+  {
+    "content": "A remarkable result known as the Eckart-Young-Mirsky theorem tells us that the optimal matrix\ncan be computed easily from the SVD, as long as the norm in question is unitary invariant (e.g., the\nspectral norm or Frobenius norm).\nTheorem 5. (Eckart-Young-Mirsky) Let ∥· ∥be a unitary invariant matrix norm. Suppose A ∈\nRm×n, where m ≥n, has singular value decomposition A = Pn\ni=1 σiuiv⊤\ni. Then the best rank-k\napproximation to A, where k ≤rank(A), is given by\nAk =\nk\nX\ni=1\nσiuiv⊤\ni",
+    "source": "Maths for ML.pdf (chunk 112)"
+  },
+  {
+    "content": "i. Then the best rank-k\napproximation to A, where k ≤rank(A), is given by\nAk =\nk\nX\ni=1\nσiuiv⊤\ni\nin the sense that\n∥A −Ak∥≤∥A −˜A∥\nfor any ˜A ∈Rm×n with rank( ˜A) ≤k.\nThe proof of the general case requires a fair amount of work, so we prove only the special case where\n∥· ∥is the spectral norm.\nProof. First we compute\n∥A −Ak∥2 =\n\r\r\r\r\r\r\nn\nX\ni=1\nσiuiv⊤\ni −\nk\nX\ni=1\nσiuiv⊤\ni\n\r\r\r\r\r\r\n2\n=\n\r\r\r\r\r\r\nn\nX\ni=k+1\nσiuiv⊤\ni\n\r\r\r\r\r\r\n2\n= σk+1",
+    "source": "Maths for ML.pdf (chunk 113)"
+  },
+  {
+    "content": "n\nX\ni=1\nσiuiv⊤\ni −\nk\nX\ni=1\nσiuiv⊤\ni\n\r\r\r\r\r\r\n2\n=\n\r\r\r\r\r\r\nn\nX\ni=k+1\nσiuiv⊤\ni\n\r\r\r\r\r\r\n2\n= σk+1\nLet ˜A ∈Rm×n have rank( ˜A) ≤k. Then by the Fundamental Theorem of Linear Algebra,\ndim null( ˜A) = n −rank( ˜A) ≥n −k\nIt follows that\nnull( ˜A) ∩span{v1, . . . , vk+1}\nis non-trivial (has a nonzero element), because otherwise there would be at least (n −k) + (k + 1) =\nn + 1 linearly independent vectors in Rn, which is impossible. Therefore let z be some element of",
+    "source": "Maths for ML.pdf (chunk 114)"
+  },
+  {
+    "content": "n + 1 linearly independent vectors in Rn, which is impossible. Therefore let z be some element of\nthe intersection, and assume without loss of generality that it has unit norm: ∥z∥2 = 1. Expand\nz = α1v1 + · · · + αk+1vk+1, noting that\n1 = ∥z∥2\n2 = ∥α1v1 + · · · + αk+1vk+1∥2\n2 = α2\n1 + · · · + α2\nk+1\n24\nby the Pythagorean theorem. Thus\n∥A −˜A∥2 ≥∥(A −˜A)z∥2\nby def., and ∥z∥2 = 1\n= ∥Az∥2\nz ∈null( ˜A)\n=\n\r\r\r\r\r\r\nn\nX\ni=1\nσiuiv⊤\niz\n\r\r\r\r\r\r\n2\n=\n\r\r\r\r\r\r\nk+1\nX\ni=1\nσiαiui\n\r\r\r\r\r\r\n2\n=\np",
+    "source": "Maths for ML.pdf (chunk 115)"
+  },
+  {
+    "content": "= ∥Az∥2\nz ∈null( ˜A)\n=\n\r\r\r\r\r\r\nn\nX\ni=1\nσiuiv⊤\niz\n\r\r\r\r\r\r\n2\n=\n\r\r\r\r\r\r\nk+1\nX\ni=1\nσiαiui\n\r\r\r\r\r\r\n2\n=\np\n(σ1α1)2 + · · · + (σk+1αk+1)2\nPythagorean theorem again\n≥σk+1\nq\nα2\n1 + · · · + α2\nk+1\nσk+1 ≤σi for i ≤k\n= ∥A −Ak∥2\nusing our earlier results\nas was to be shown.\nA measure of the quality of the approximation is given by\n∥Ak∥2\nf\n∥A∥2f\n= σ2\n1 + · · · + σ2\nk\nσ2\n1 + · · · + σ2r\nIdeally, this ratio will be close to 1, indicating that most of the information was retained.\n3.16\nPseudoinverses",
+    "source": "Maths for ML.pdf (chunk 116)"
+  },
+  {
+    "content": "3.16\nPseudoinverses\nLet A ∈Rm×n. If m ̸= n, then A cannot possibly be invertible. However, there is a generalization\nof the inverse known as the Moore-Penrose pseudoinverse, denoted A† ∈Rn×m, which always\nexists and is deﬁned uniquely by the following properties:\n(i) AA†A = A\n(ii) A†AA† = A†\n(iii) AA† is symmetric\n(iv) A†A is symmetric\nIf A is invertible, then A† = A−1. More generally, we can compute the pseudoinverse of a matrix\nfrom its singular value decomposition: if A = UΣV⊤, then",
+    "source": "Maths for ML.pdf (chunk 117)"
+  },
+  {
+    "content": "from its singular value decomposition: if A = UΣV⊤, then\nA† = VΣ†U⊤\nwhere Σ† can be computed from Σ by taking the transpose and inverting the nonzero singular\nvalues on the diagonal. Verifying that this matrix satisﬁes the properties of the pseudoinverse is\nstraightforward and left as an exercise to the reader.\n25\n3.17\nSome useful matrix identities\n3.17.1\nMatrix-vector product as linear combination of matrix columns",
+    "source": "Maths for ML.pdf (chunk 118)"
+  },
+  {
+    "content": "Some useful matrix identities\n3.17.1\nMatrix-vector product as linear combination of matrix columns\nProposition 10. Let x ∈Rn be a vector and A ∈Rm×n a matrix with columns a1, . . . , an. Then\nAx =\nn\nX\ni=1\nxiai\nThis identity is extremely useful in understanding linear operators in terms of their matrices’\ncolumns. The proof is very simple (consider each element of Ax individually and expand by deﬁni-\ntions) but it is a good exercise to convince yourself.\n3.17.2",
+    "source": "Maths for ML.pdf (chunk 119)"
+  },
+  {
+    "content": "tions) but it is a good exercise to convince yourself.\n3.17.2\nSum of outer products as matrix-matrix product\nAn outer product is an expression of the form ab⊤, where a ∈Rm and b ∈Rn. By inspection it\nis not hard to see that such an expression yields an m × n matrix such that\n[ab⊤]ij = aibj\nIt is not immediately obvious, but the sum of outer products is actually equivalent to an appropriate\nmatrix-matrix product! We formalize this statement as",
+    "source": "Maths for ML.pdf (chunk 120)"
+  },
+  {
+    "content": "matrix-matrix product! We formalize this statement as\nProposition 11. Let a1, . . . , ak ∈Rm and b1, . . . , bk ∈Rn. Then\nk\nX\nℓ=1\naℓb⊤\nℓ= AB⊤\nwhere\nA =\n\u0002a1\n· · ·\nak\n\u0003\n,\nB =\n\u0002b1\n· · ·\nbk\n\u0003\nProof. For each (i, j), we have\n\n\nk\nX\nℓ=1\naℓb⊤\nℓ\n\n\nij\n=\nk\nX\nℓ=1\n[aℓb⊤\nℓ]ij =\nk\nX\nℓ=1\n[aℓ]i[bℓ]j =\nk\nX\nℓ=1\nAiℓBjℓ\nThis last expression should be recognized as an inner product between the ith row of A and the jth",
+    "source": "Maths for ML.pdf (chunk 121)"
+  },
+  {
+    "content": "This last expression should be recognized as an inner product between the ith row of A and the jth\nrow of B, or equivalently the jth column of B⊤. Hence by the deﬁnition of matrix multiplication, it\nis equal to [AB⊤]ij.\n3.17.3\nQuadratic forms\nLet A ∈Rn×n be a symmetric matrix, and recall that the expression x⊤Ax is called a quadratic form\nof A. It is in some cases helpful to rewrite the quadratic form in terms of the individual elements\nthat make up A and x:\nx⊤Ax =\nn\nX\ni=1\nn\nX\nj=1\nAijxixj",
+    "source": "Maths for ML.pdf (chunk 122)"
+  },
+  {
+    "content": "that make up A and x:\nx⊤Ax =\nn\nX\ni=1\nn\nX\nj=1\nAijxixj\nThis identity is valid for any square matrix (need not be symmetric), although quadratic forms are\nusually only discussed in the context of symmetric matrices.\n26\n4\nCalculus and Optimization\nMuch of machine learning is about minimizing a cost function (also called an objective function\nin the optimization community), which is a scalar function of several variables that typically measures\nhow poorly our model ﬁts the data we have.\n4.1\nExtrema",
+    "source": "Maths for ML.pdf (chunk 123)"
+  },
+  {
+    "content": "how poorly our model ﬁts the data we have.\n4.1\nExtrema\nOptimization is about ﬁnding extrema, which depending on the application could be minima or\nmaxima. When deﬁning extrema, it is necessary to consider the set of inputs over which we’re\noptimizing. This set X ⊆Rd is called the feasible set. If X is the entire domain of the function\nbeing optimized (as it often will be for our purposes), we say that the problem is unconstrained.",
+    "source": "Maths for ML.pdf (chunk 124)"
+  },
+  {
+    "content": "being optimized (as it often will be for our purposes), we say that the problem is unconstrained.\nOtherwise the problem is constrained and may be much harder to solve, depending on the nature\nof the feasible set.\nSuppose f : Rd →R. A point x is said to be a local minimum (resp. local maximum) of f in X\nif f(x) ≤f(y) (resp. f(x) ≥f(y)) for all y in some neighborhood N ⊆X about x.8 Furthermore, if\nf(x) ≤f(y) for all y ∈X, then x is a global minimum of f in X (similarly for global maximum).",
+    "source": "Maths for ML.pdf (chunk 125)"
+  },
+  {
+    "content": "f(x) ≤f(y) for all y ∈X, then x is a global minimum of f in X (similarly for global maximum).\nIf the phrase “in X” is unclear from context, assume we are optimizing over the whole domain of\nthe function.\nThe qualiﬁer strict (as in e.g. a strict local minimum) means that the inequality sign in the deﬁnition\nis actually a > or <, with equality not allowed. This indicates that the extremum is unique within\nsome neighborhood.",
+    "source": "Maths for ML.pdf (chunk 126)"
+  },
+  {
+    "content": "some neighborhood.\nObserve that maximizing a function f is equivalent to minimizing −f, so optimization problems are\ntypically phrased in terms of minimization without loss of generality. This convention (which we\nfollow here) eliminates the need to discuss minimization and maximization separately.\n4.2\nGradients\nThe single most important concept from calculus in the context of machine learning is the gradient.",
+    "source": "Maths for ML.pdf (chunk 127)"
+  },
+  {
+    "content": "The single most important concept from calculus in the context of machine learning is the gradient.\nGradients generalize derivatives to scalar functions of several variables. The gradient of f : Rd →R,\ndenoted ∇f, is given by\n∇f =\n\n\n∂f\n∂x1...\n∂f\n∂xn\n\n\ni.e.\n[∇f]i = ∂f\n∂xi\nGradients have the following very important property: ∇f(x) points in the direction of steepest\nascent from x. Similarly, −∇f(x) points in the direction of steepest descent from x. We will",
+    "source": "Maths for ML.pdf (chunk 128)"
+  },
+  {
+    "content": "ascent from x. Similarly, −∇f(x) points in the direction of steepest descent from x. We will\nuse this fact frequently when iteratively minimizing a function via gradient descent.\n4.3\nThe Jacobian\nThe Jacobian of f : Rn →Rm is a matrix of ﬁrst-order partial derivatives:\nJf =\n\n\n∂f1\n∂x1\n. . .\n∂f1\n∂xn\n...\n...\n...\n∂fm\n∂x1\n. . .\n∂fm\n∂xn\n\n\ni.e.\n[Jf]ij = ∂fi\n∂xj\n8 A neighborhood about x is an open set which contains x.\n27\nNote the special case m = 1, where ∇f = J⊤\nf.\n4.4\nThe Hessian",
+    "source": "Maths for ML.pdf (chunk 129)"
+  },
+  {
+    "content": "27\nNote the special case m = 1, where ∇f = J⊤\nf.\n4.4\nThe Hessian\nThe Hessian matrix of f : Rd →R is a matrix of second-order partial derivatives:\n∇2f =\n\n\n∂2f\n∂x2\n1\n. . .\n∂2f\n∂x1∂xd\n...\n...\n...\n∂2f\n∂xd∂x1\n. . .\n∂2f\n∂x2\nd\n\n\ni.e.\n[∇2f]ij =\n∂2f\n∂xi∂xj\nRecall that if the partial derivatives are continuous, the order of diﬀerentiation can be interchanged\n(Clairaut’s theorem), so the Hessian matrix will be symmetric. This will typically be the case for",
+    "source": "Maths for ML.pdf (chunk 130)"
+  },
+  {
+    "content": "(Clairaut’s theorem), so the Hessian matrix will be symmetric. This will typically be the case for\ndiﬀerentiable functions that we work with.\nThe Hessian is used in some optimization algorithms such as Newton’s method. It is expensive to\ncalculate but can drastically reduce the number of iterations needed to converge to a local minimum\nby providing information about the curvature of f.\n4.5\nMatrix calculus",
+    "source": "Maths for ML.pdf (chunk 131)"
+  },
+  {
+    "content": "by providing information about the curvature of f.\n4.5\nMatrix calculus\nSince a lot of optimization reduces to ﬁnding points where the gradient vanishes, it is useful to have\ndiﬀerentiation rules for matrix and vector expressions. We give some common rules here. Probably\nthe two most important for our purposes are\n∇x(a⊤x) = a\n∇x(x⊤Ax) = (A + A⊤)x\nNote that this second rule is deﬁned only if A is square. Furthermore, if A is symmetric, we can\nsimplify the result to 2Ax.\n4.5.1\nThe chain rule",
+    "source": "Maths for ML.pdf (chunk 132)"
+  },
+  {
+    "content": "simplify the result to 2Ax.\n4.5.1\nThe chain rule\nMost functions that we wish to optimize are not completely arbitrary functions, but rather are\ncomposed of simpler functions which we know how to handle. The chain rule gives us a way to\ncalculate derivatives for a composite function in terms of the derivatives of the simpler functions\nthat make it up.\nThe chain rule from single-variable calculus should be familiar:\n(f ◦g)′(x) = f ′(g(x))g′(x)",
+    "source": "Maths for ML.pdf (chunk 133)"
+  },
+  {
+    "content": "The chain rule from single-variable calculus should be familiar:\n(f ◦g)′(x) = f ′(g(x))g′(x)\nwhere ◦denotes function composition. There is a natural generalization of this rule to multivariate\nfunctions.\nProposition 12. Suppose f : Rm →Rk and g : Rn →Rm. Then f ◦g : Rn →Rk and\nJf◦g(x) = Jf(g(x))Jg(x)\nIn the special case k = 1 we have the following corollary since ∇f = J⊤\nf.\nCorollary 1. Suppose f : Rm →R and g : Rn →Rm. Then f ◦g : Rn →R and\n∇(f ◦g)(x) = Jg(x)⊤∇f(g(x))\n28\n4.6\nTaylor’s theorem",
+    "source": "Maths for ML.pdf (chunk 134)"
+  },
+  {
+    "content": "∇(f ◦g)(x) = Jg(x)⊤∇f(g(x))\n28\n4.6\nTaylor’s theorem\nTaylor’s theorem has natural generalizations to functions of more than one variable. We give the\nversion presented in [1].\nTheorem 6. (Taylor’s theorem) Suppose f : Rd →R is continuously diﬀerentiable, and let h ∈Rd.\nThen there exists t ∈(0, 1) such that\nf(x + h) = f(x) + ∇f(x + th)⊤h\nFurthermore, if f is twice continuously diﬀerentiable, then\n∇f(x + h) = ∇f(x) +\nZ 1\n0\n∇2f(x + th)h dt\nand there exists t ∈(0, 1) such that",
+    "source": "Maths for ML.pdf (chunk 135)"
+  },
+  {
+    "content": "∇f(x + h) = ∇f(x) +\nZ 1\n0\n∇2f(x + th)h dt\nand there exists t ∈(0, 1) such that\nf(x + h) = f(x) + ∇f(x)⊤h + 1\n2h⊤∇2f(x + th)h\nThis theorem is used in proofs about conditions for local minima of unconstrained optimization\nproblems. Some of the most important results are given in the next section.\n4.7\nConditions for local minima\nProposition 13. If x∗is a local minimum of f and f is continuously diﬀerentiable in a neighborhood\nof x∗, then ∇f(x∗) = 0.",
+    "source": "Maths for ML.pdf (chunk 136)"
+  },
+  {
+    "content": "of x∗, then ∇f(x∗) = 0.\nProof. Let x∗be a local minimum of f, and suppose towards a contradiction that ∇f(x∗) ̸= 0. Let\nh = −∇f(x∗), noting that by the continuity of ∇f we have\nlim\nt→0 −∇f(x∗+ th) = −∇f(x∗) = h\nHence\nlim\nt→0 h⊤∇f(x∗+ th) = h⊤∇f(x∗) = −∥h∥2\n2 < 0\nThus there exists T > 0 such that h⊤∇f(x∗+ th) < 0 for all t ∈[0, T]. Now we apply Taylor’s\ntheorem: for any t ∈(0, T], there exists t′ ∈(0, t) such that\nf(x∗+ th) = f(x∗) + th⊤∇f(x∗+ t′h) < f(x∗)",
+    "source": "Maths for ML.pdf (chunk 137)"
+  },
+  {
+    "content": "f(x∗+ th) = f(x∗) + th⊤∇f(x∗+ t′h) < f(x∗)\nwhence it follows that x∗is not a local minimum, a contradiction. Hence ∇f(x∗) = 0.\nThe proof shows us why the vanishing gradient is necessary for an extremum: if ∇f(x) is nonzero,\nthere always exists a suﬃciently small step α > 0 such that f(x−α∇f(x))) < f(x). For this reason,\n−∇f(x) is called a descent direction.\nPoints where the gradient vanishes are called stationary points. Note that not all stationary points",
+    "source": "Maths for ML.pdf (chunk 138)"
+  },
+  {
+    "content": "are extrema. Consider f : R2 →R given by f(x, y) = x2 −y2. We have ∇f(0) = 0, but the point\n0 is the minimum along the line y = 0 and the maximum along the line x = 0. Thus it is neither\na local minimum nor a local maximum of f. Points such as these, where the gradient vanishes but\nthere is no local extremum, are called saddle points.\nWe have seen that ﬁrst-order information (i.e.\nthe gradient) is insuﬃcient to characterize local",
+    "source": "Maths for ML.pdf (chunk 139)"
+  },
+  {
+    "content": "We have seen that ﬁrst-order information (i.e.\nthe gradient) is insuﬃcient to characterize local\nminima. But we can say more with second-order information (i.e. the Hessian). First we prove a\nnecessary second-order condition for local minima.\n29\nProposition 14. If x∗is a local minimum of f and f is twice continuously diﬀerentiable in a\nneighborhood of x∗, then ∇2f(x∗) is positive semi-deﬁnite.\nProof. Let x∗be a local minimum of f, and suppose towards a contradiction that ∇2f(x∗) is not",
+    "source": "Maths for ML.pdf (chunk 140)"
+  },
+  {
+    "content": "Proof. Let x∗be a local minimum of f, and suppose towards a contradiction that ∇2f(x∗) is not\npositive semi-deﬁnite. Let h be such that h⊤∇2f(x∗)h < 0, noting that by the continuity of ∇2f\nwe have\nlim\nt→0 ∇2f(x∗+ th) = ∇2f(x∗)\nHence\nlim\nt→0 h⊤∇2f(x∗+ th)h = h⊤∇2f(x∗)h < 0\nThus there exists T > 0 such that h⊤∇2f(x∗+ th)h < 0 for all t ∈[0, T]. Now we apply Taylor’s\ntheorem: for any t ∈(0, T], there exists t′ ∈(0, t) such that\nf(x∗+ th) = f(x∗) + th⊤∇f(x∗)\n|\n{z\n}\n0\n+1\n2t2h⊤∇2f(x∗+ t′h)h < f(x∗)",
+    "source": "Maths for ML.pdf (chunk 141)"
+  },
+  {
+    "content": "f(x∗+ th) = f(x∗) + th⊤∇f(x∗)\n|\n{z\n}\n0\n+1\n2t2h⊤∇2f(x∗+ t′h)h < f(x∗)\nwhere the middle term vanishes because ∇f(x∗) = 0 by the previous result. It follows that x∗is\nnot a local minimum, a contradiction. Hence ∇2f(x∗) is positive semi-deﬁnite.\nNow we give suﬃcient conditions for local minima.\nProposition 15. Suppose f is twice continuously diﬀerentiable with ∇2f positive semi-deﬁnite in\na neighborhood of x∗, and that ∇f(x∗) = 0. Then x∗is a local minimum of f. Furthermore if",
+    "source": "Maths for ML.pdf (chunk 142)"
+  },
+  {
+    "content": "a neighborhood of x∗, and that ∇f(x∗) = 0. Then x∗is a local minimum of f. Furthermore if\n∇2f(x∗) is positive deﬁnite, then x∗is a strict local minimum.\nProof. Let B be an open ball of radius r > 0 centered at x∗which is contained in the neighborhood.\nApplying Taylor’s theorem, we have that for any h with ∥h∥2 < r, there exists t ∈(0, 1) such that\nf(x∗+ h) = f(x∗) + h⊤∇f(x∗)\n|\n{z\n}\n0\n+1\n2h⊤∇2f(x∗+ th)h ≥f(x∗)",
+    "source": "Maths for ML.pdf (chunk 143)"
+  },
+  {
+    "content": "f(x∗+ h) = f(x∗) + h⊤∇f(x∗)\n|\n{z\n}\n0\n+1\n2h⊤∇2f(x∗+ th)h ≥f(x∗)\nThe last inequality holds because ∇2f(x∗+ th) is positive semi-deﬁnite (since ∥th∥2 = t∥h∥2 <\n∥h∥2 < r), so h⊤∇2f(x∗+ th)h ≥0. Since f(x∗) ≤f(x∗+ h) for all h with ∥h∥2 < r, we conclude\nthat x∗is a local minimum.\nNow further suppose that ∇2f(x∗) is strictly positive deﬁnite. Since the Hessian is continuous we\ncan choose another ball B′ with radius r′ > 0 centered at x∗such that ∇2f(x) is positive deﬁnite for",
+    "source": "Maths for ML.pdf (chunk 144)"
+  },
+  {
+    "content": "all x ∈B′. Then following the same argument as above (except with a strict inequality now since\nthe Hessian is positive deﬁnite) we have f(x∗+ h) > f(x∗) for all h with 0 < ∥h∥2 < r′. Hence x∗\nis a strict local minimum.\nNote that, perhaps counterintuitively, the conditions ∇f(x∗) = 0 and ∇2f(x∗) positive semi-deﬁnite\nare not enough to guarantee a local minimum at x∗! Consider the function f(x) = x3. We have\nf ′(0) = 0 and f ′′(0) = 0 (so the Hessian, which in this case is the 1 × 1 matrix\n\u00020\u0003",
+    "source": "Maths for ML.pdf (chunk 145)"
+  },
+  {
+    "content": "f ′(0) = 0 and f ′′(0) = 0 (so the Hessian, which in this case is the 1 × 1 matrix\n\u00020\u0003\n, is positive\nsemi-deﬁnite). But f has a saddle point at x = 0. The function f(x) = −x4 is an even worse\noﬀender – it has the same gradient and Hessian at x = 0, but x = 0 is a strict local maximum for\nthis function!\nFor these reasons we require that the Hessian remains positive semi-deﬁnite as long as we are close",
+    "source": "Maths for ML.pdf (chunk 146)"
+  },
+  {
+    "content": "For these reasons we require that the Hessian remains positive semi-deﬁnite as long as we are close\nto x∗. Unfortunately, this condition is not practical to check computationally, but in some cases we\ncan verify it analytically (usually by showing that ∇2f(x) is p.s.d. for all x ∈Rd). Also, if ∇2f(x∗)\nis strictly positive deﬁnite, the continuity assumption on f implies this condition, so we don’t have\nto worry.\n30\n(a) A convex set\n(b) A non-convex set\nFigure 1: What convex sets look like\n4.8",
+    "source": "Maths for ML.pdf (chunk 147)"
+  },
+  {
+    "content": "to worry.\n30\n(a) A convex set\n(b) A non-convex set\nFigure 1: What convex sets look like\n4.8\nConvexity\nConvexity is a term that pertains to both sets and functions. For functions, there are diﬀerent\ndegrees of convexity, and how convex a function is tells us a lot about its minima: do they exist, are\nthey unique, how quickly can we ﬁnd them using optimization algorithms, etc. In this section, we\npresent basic results regarding convexity, strict convexity, and strong convexity.\n4.8.1\nConvex sets",
+    "source": "Maths for ML.pdf (chunk 148)"
+  },
+  {
+    "content": "4.8.1\nConvex sets\nA set X ⊆Rd is convex if\ntx + (1 −t)y ∈X\nfor all x, y ∈X and all t ∈[0, 1].\nGeometrically, this means that all the points on the line segment between any two points in X are\nalso in X. See Figure 1 for a visual.\nWhy do we care whether or not a set is convex? We will see later that the nature of minima can\ndepend greatly on whether or not the feasible set is convex. Undesirable pathological results can",
+    "source": "Maths for ML.pdf (chunk 149)"
+  },
+  {
+    "content": "depend greatly on whether or not the feasible set is convex. Undesirable pathological results can\noccur when we allow the feasible set to be arbitrary, so for proofs we will need to assume that it is\nconvex. Fortunately, we often want to minimize over all of Rd, which is easily seen to be a convex\nset.\n4.8.2\nBasics of convex functions\nIn the remainder of this section, assume f : Rd →R unless otherwise noted. We’ll start with the\ndeﬁnitions and then give some results.\nA function f is convex if",
+    "source": "Maths for ML.pdf (chunk 150)"
+  },
+  {
+    "content": "deﬁnitions and then give some results.\nA function f is convex if\nf(tx + (1 −t)y) ≤tf(x) + (1 −t)f(y)\nfor all x, y ∈dom f and all t ∈[0, 1].\n31\nFigure 2: What convex functions look like\nIf the inequality holds strictly (i.e. < rather than ≤) for all t ∈(0, 1) and x ̸= y, then we say that\nf is strictly convex.\nA function f is strongly convex with parameter m (or m-strongly convex) if the function\nx 7→f(x) −m\n2 ∥x∥2\n2\nis convex.",
+    "source": "Maths for ML.pdf (chunk 151)"
+  },
+  {
+    "content": "x 7→f(x) −m\n2 ∥x∥2\n2\nis convex.\nThese conditions are given in increasing order of strength; strong convexity implies strict convexity\nwhich implies convexity.\nGeometrically, convexity means that the line segment between two points on the graph of f lies on\nor above the graph itself. See Figure 2 for a visual.\nStrict convexity means that the line segment lies strictly above the graph of f, except at the segment\nendpoints. (So actually the function in the ﬁgure appears to be strictly convex.)",
+    "source": "Maths for ML.pdf (chunk 152)"
+  },
+  {
+    "content": "endpoints. (So actually the function in the ﬁgure appears to be strictly convex.)\n4.8.3\nConsequences of convexity\nWhy do we care if a function is (strictly/strongly) convex?\nBasically, our various notions of convexity have implications about the nature of minima. It should\nnot be surprising that the stronger conditions tell us more about the minima.\nProposition 16. Let X be a convex set. If f is convex, then any local minimum of f in X is also\na global minimum.",
+    "source": "Maths for ML.pdf (chunk 153)"
+  },
+  {
+    "content": "a global minimum.\nProof. Suppose f is convex, and let x∗be a local minimum of f in X. Then for some neighborhood\nN ⊆X about x∗, we have f(x) ≥f(x∗) for all x ∈N. Suppose towards a contradiction that there\nexists ˜x ∈X such that f(˜x) < f(x∗).\n32\nConsider the line segment x(t) = tx∗+ (1 −t)˜x, t ∈[0, 1], noting that x(t) ∈X by the convexity of\nX. Then by the convexity of f,\nf(x(t)) ≤tf(x∗) + (1 −t)f(˜x) < tf(x∗) + (1 −t)f(x∗) = f(x∗)\nfor all t ∈(0, 1).",
+    "source": "Maths for ML.pdf (chunk 154)"
+  },
+  {
+    "content": "f(x(t)) ≤tf(x∗) + (1 −t)f(˜x) < tf(x∗) + (1 −t)f(x∗) = f(x∗)\nfor all t ∈(0, 1).\nWe can pick t to be suﬃciently close to 1 that x(t) ∈N; then f(x(t)) ≥f(x∗) by the deﬁnition of\nN, but f(x(t)) < f(x∗) by the above inequality, a contradiction.\nIt follows that f(x∗) ≤f(x) for all x ∈X, so x∗is a global minimum of f in X.\nProposition 17. Let X be a convex set. If f is strictly convex, then there exists at most one local",
+    "source": "Maths for ML.pdf (chunk 155)"
+  },
+  {
+    "content": "Proposition 17. Let X be a convex set. If f is strictly convex, then there exists at most one local\nminimum of f in X. Consequently, if it exists it is the unique global minimum of f in X.\nProof. The second sentence follows from the ﬁrst, so all we must show is that if a local minimum\nexists in X then it is unique.\nSuppose x∗is a local minimum of f in X, and suppose towards a contradiction that there exists a\nlocal minimum ˜x ∈X such that ˜x ̸= x∗.",
+    "source": "Maths for ML.pdf (chunk 156)"
+  },
+  {
+    "content": "local minimum ˜x ∈X such that ˜x ̸= x∗.\nSince f is strictly convex, it is convex, so x∗and ˜x are both global minima of f in X by the previous\nresult. Hence f(x∗) = f(˜x). Consider the line segment x(t) = tx∗+ (1 −t)˜x, t ∈[0, 1], which again\nmust lie entirely in X. By the strict convexity of f,\nf(x(t)) < tf(x∗) + (1 −t)f(˜x) = tf(x∗) + (1 −t)f(x∗) = f(x∗)\nfor all t ∈(0, 1). But this contradicts the fact that x∗is a global minimum. Therefore if ˜x is a local",
+    "source": "Maths for ML.pdf (chunk 157)"
+  },
+  {
+    "content": "minimum of f in X, then ˜x = x∗, so x∗is the unique minimum in X.\nIt is worthwhile to examine how the feasible set aﬀects the optimization problem. We will see why\nthe assumption that X is convex is needed in the results above.\nConsider the function f(x) = x2, which is a strictly convex function. The unique global minimum\nof this function in R is x = 0. But let’s see what happens when we change the feasible set X.",
+    "source": "Maths for ML.pdf (chunk 158)"
+  },
+  {
+    "content": "of this function in R is x = 0. But let’s see what happens when we change the feasible set X.\n(i) X = {1}: This set is actually convex, so we still have a unique global minimum. But it is not\nthe same as the unconstrained minimum!\n(ii) X = R\\{0}: This set is non-convex, and we can see that f has no minima in X. For any point\nx ∈X, one can ﬁnd another point y ∈X such that f(y) < f(x).\n(iii) X = (−∞, −1] ∪[0, ∞): This set is non-convex, and we can see that there is a local minimum",
+    "source": "Maths for ML.pdf (chunk 159)"
+  },
+  {
+    "content": "(iii) X = (−∞, −1] ∪[0, ∞): This set is non-convex, and we can see that there is a local minimum\n(x = −1) which is distinct from the global minimum (x = 0).\n(iv) X = (−∞, −1] ∪[1, ∞): This set is non-convex, and we can see that there are two global\nminima (x = ±1).\n4.8.4\nShowing that a function is convex\nHopefully the previous section has convinced the reader that convexity is an important property.",
+    "source": "Maths for ML.pdf (chunk 160)"
+  },
+  {
+    "content": "Hopefully the previous section has convinced the reader that convexity is an important property.\nNext we turn to the issue of showing that a function is (strictly/strongly) convex. It is of course\npossible (in principle) to directly show that the condition in the deﬁnition holds, but this is usually\nnot the easiest way.\nProposition 18. Norms are convex.\n33\nProof. Let ∥· ∥be a norm on a vector space V . Then for all x, y ∈V and t ∈[0, 1],",
+    "source": "Maths for ML.pdf (chunk 161)"
+  },
+  {
+    "content": "33\nProof. Let ∥· ∥be a norm on a vector space V . Then for all x, y ∈V and t ∈[0, 1],\n∥tx + (1 −t)y∥≤∥tx∥+ ∥(1 −t)y∥= |t|∥x∥+ |1 −t|∥y∥= t∥x∥+ (1 −t)∥y∥\nwhere we have used respectively the triangle inequality, the homogeneity of norms, and the fact that\nt and 1 −t are nonnegative. Hence ∥· ∥is convex.\nProposition 19. Suppose f is diﬀerentiable. Then f is convex if and only if\nf(x) ≥f(y) + ⟨∇f(y), x −y⟩\nfor all x, y ∈dom f.\nProof. ( =⇒) Suppose f is convex, i.e.",
+    "source": "Maths for ML.pdf (chunk 162)"
+  },
+  {
+    "content": "f(x) ≥f(y) + ⟨∇f(y), x −y⟩\nfor all x, y ∈dom f.\nProof. ( =⇒) Suppose f is convex, i.e.\nf(tx + (1 −t)y) ≤tf(x) + (1 −t)f(y) = f(y) + t(f(x) −f(y))\nfor all x, y ∈dom f and all t ∈[0, 1]. Rearranging gives\nf(y + t(x −y)) −f(y)\nt\n≤f(x) −f(y)\nAs t →0, the left-hand side becomes ⟨∇f(y), x −y⟩, so the result follows.\n( ⇐= ) Suppose\nf(x) ≥f(y) + ⟨∇f(y), x −y⟩\nfor all x, y ∈dom f. Fix x, y ∈dom f, t ∈[0, 1], and deﬁne z = tx + (1 −t)y. Then\nf(x) ≥f(z) + ⟨∇f(z), x −z⟩\nf(y) ≥f(z) + ⟨∇f(z), y −z⟩\nso",
+    "source": "Maths for ML.pdf (chunk 163)"
+  },
+  {
+    "content": "f(x) ≥f(z) + ⟨∇f(z), x −z⟩\nf(y) ≥f(z) + ⟨∇f(z), y −z⟩\nso\ntf(x) + (1 −t)f(y) ≥t\n\u0000f(z) + ⟨∇f(z), x −z⟩\n\u0001\n+ (1 −t)\n\u0000f(z) + ⟨∇f(z), y −z⟩\n\u0001\n= f(z) + ⟨∇f(z), t(x −z) + (1 −t)(y −z)⟩\n= f(tx + (1 −t)y) + ⟨∇f(z), tx + (1 −t)y −z\n|\n{z\n}\n0\n⟩\n= f(tx + (1 −t)y)\nimplying that f is convex.\nProposition 20. Suppose f is twice diﬀerentiable. Then\n(i) f is convex if and only if ∇2f(x) ⪰0 for all x ∈dom f.\n(ii) If ∇2f(x) ≻0 for all x ∈dom f, then f is strictly convex.",
+    "source": "Maths for ML.pdf (chunk 164)"
+  },
+  {
+    "content": "(ii) If ∇2f(x) ≻0 for all x ∈dom f, then f is strictly convex.\n(iii) f is m-strongly convex if and only if ∇2f(x) ⪰mI for all x ∈dom f.\nProof. Omitted.\nProposition 21. If f is convex and α ≥0, then αf is convex.\n34\nProof. Suppose f is convex and α ≥0. Then for all x, y ∈dom(αf) = dom f,\n(αf)(tx + (1 −t)y) = αf(tx + (1 −t)y)\n≤α\n\u0000tf(x) + (1 −t)f(y)\n\u0001\n= t(αf(x)) + (1 −t)(αf(y))\n= t(αf)(x) + (1 −t)(αf)(y)\nso αf is convex.",
+    "source": "Maths for ML.pdf (chunk 165)"
+  },
+  {
+    "content": "≤α\n\u0000tf(x) + (1 −t)f(y)\n\u0001\n= t(αf(x)) + (1 −t)(αf(y))\n= t(αf)(x) + (1 −t)(αf)(y)\nso αf is convex.\nProposition 22. If f and g are convex, then f + g is convex. Furthermore, if g is strictly convex,\nthen f + g is strictly convex, and if g is m-strongly convex, then f + g is m-strongly convex.\nProof. Suppose f and g are convex. Then for all x, y ∈dom(f + g) = dom f ∩dom g,\n(f + g)(tx + (1 −t)y) = f(tx + (1 −t)y) + g(tx + (1 −t)y)\n≤tf(x) + (1 −t)f(y) + g(tx + (1 −t)y)\nconvexity of f",
+    "source": "Maths for ML.pdf (chunk 166)"
+  },
+  {
+    "content": "≤tf(x) + (1 −t)f(y) + g(tx + (1 −t)y)\nconvexity of f\n≤tf(x) + (1 −t)f(y) + tg(x) + (1 −t)g(y)\nconvexity of g\n= t(f(x) + g(x)) + (1 −t)(f(y) + g(y))\n= t(f + g)(x) + (1 −t)(f + g)(y)\nso f + g is convex.\nIf g is strictly convex, the second inequality above holds strictly for x ̸= y and t ∈(0, 1), so f + g is\nstrictly convex.\nIf g is m-strongly convex, then the function h(x) ≡g(x) −m\n2 ∥x∥2\n2 is convex, so f + h is convex. But\n(f + h)(x) ≡f(x) + h(x) ≡f(x) + g(x) −m\n2 ∥x∥2\n2 ≡(f + g)(x) −m\n2 ∥x∥2\n2",
+    "source": "Maths for ML.pdf (chunk 167)"
+  },
+  {
+    "content": "(f + h)(x) ≡f(x) + h(x) ≡f(x) + g(x) −m\n2 ∥x∥2\n2 ≡(f + g)(x) −m\n2 ∥x∥2\n2\nso f + g is m-strongly convex.\nProposition 23. If f1, . . . , fn are convex and α1, . . . , αn ≥0, then\nn\nX\ni=1\nαifi\nis convex.\nProof. Follows from the previous two propositions by induction.\nProposition 24. If f is convex, then g(x) ≡f(Ax + b) is convex for any appropriately-sized A\nand b.\nProof. Suppose f is convex and g is deﬁned like so. Then for all x, y ∈dom g,\ng(tx + (1 −t)y) = f(A(tx + (1 −t)y) + b)",
+    "source": "Maths for ML.pdf (chunk 168)"
+  },
+  {
+    "content": "g(tx + (1 −t)y) = f(A(tx + (1 −t)y) + b)\n= f(tAx + (1 −t)Ay + b)\n= f(tAx + (1 −t)Ay + tb + (1 −t)b)\n= f(t(Ax + b) + (1 −t)(Ay + b))\n≤tf(Ax + b) + (1 −t)f(Ay + b)\nconvexity of f\n= tg(x) + (1 −t)g(y)\nThus g is convex.\n35\nProposition 25. If f and g are convex, then h(x) ≡max{f(x), g(x)} is convex.\nProof. Suppose f and g are convex and h is deﬁned like so. Then for all x, y ∈dom h,\nh(tx + (1 −t)y) = max{f(tx + (1 −t)y), g(tx + (1 −t)y)}\n≤max{tf(x) + (1 −t)f(y), tg(x) + (1 −t)g(y)}",
+    "source": "Maths for ML.pdf (chunk 169)"
+  },
+  {
+    "content": "≤max{tf(x) + (1 −t)f(y), tg(x) + (1 −t)g(y)}\n≤max{tf(x), tg(x)} + max{(1 −t)f(y), (1 −t)g(y)}\n= t max{f(x), g(x)} + (1 −t) max{f(y), g(y)}\n= th(x) + (1 −t)h(y)\nNote that in the ﬁrst inequality we have used convexity of f and g plus the fact that a ≤c, b ≤d\nimplies max{a, b} ≤max{c, d}. In the second inequality we have used the fact that max{a+b, c+d} ≤\nmax{a, c} + max{b, d}.\nThus h is convex.\n4.8.5\nExamples",
+    "source": "Maths for ML.pdf (chunk 170)"
+  },
+  {
+    "content": "max{a, c} + max{b, d}.\nThus h is convex.\n4.8.5\nExamples\nA good way to gain intuition about the distinction between convex, strictly convex, and strongly\nconvex functions is to consider examples where the stronger property fails to hold.\nFunctions that are convex but not strictly convex:\n(i) f(x) = w⊤x + α for any w ∈Rd, α ∈R. Such a function is called an aﬃne function, and it\nis both convex and concave. (In fact, a function is aﬃne if and only if it is both convex and",
+    "source": "Maths for ML.pdf (chunk 171)"
+  },
+  {
+    "content": "is both convex and concave. (In fact, a function is aﬃne if and only if it is both convex and\nconcave.) Note that linear functions and constant functions are special cases of aﬃne functions.\n(ii) f(x) = ∥x∥1\nFunctions that are strictly but not strongly convex:\n(i) f(x) = x4. This example is interesting because it is strictly convex but you cannot show this\nfact via a second-order argument (since f ′′(0) = 0).\n(ii) f(x) = exp(x).",
+    "source": "Maths for ML.pdf (chunk 172)"
+  },
+  {
+    "content": "fact via a second-order argument (since f ′′(0) = 0).\n(ii) f(x) = exp(x).\nThis example is interesting because it’s bounded below but has no local\nminimum.\n(iii) f(x) = −log x. This example is interesting because it’s strictly convex but not bounded below.\nFunctions that are strongly convex:\n(i) f(x) = ∥x∥2\n2\n36\n5\nProbability\nProbability theory provides powerful tools for modeling and dealing with uncertainty.\n5.1\nBasics",
+    "source": "Maths for ML.pdf (chunk 173)"
+  },
+  {
+    "content": "Probability theory provides powerful tools for modeling and dealing with uncertainty.\n5.1\nBasics\nSuppose we have some sort of randomized experiment (e.g. a coin toss, die roll) that has a ﬁxed set\nof possible outcomes. This set is called the sample space and denoted Ω.\nWe would like to deﬁne probabilities for some events, which are subsets of Ω. The set of events is\ndenoted F.9 The complement of the event A is another event, Ac = Ω\\ A.",
+    "source": "Maths for ML.pdf (chunk 174)"
+  },
+  {
+    "content": "denoted F.9 The complement of the event A is another event, Ac = Ω\\ A.\nThen we can deﬁne a probability measure P : F →[0, 1] which must satisfy\n(i) P(Ω) = 1\n(ii) Countable additivity: for any countable collection of disjoint sets {Ai} ⊆F,\nP\n\u0012 [\ni\nAi\n\u0013\n=\nX\ni\nP(Ai)\nThe triple (Ω, F, P) is called a probability space.10\nIf P(A) = 1, we say that A occurs almost surely (often abbreviated a.s.).11, and conversely A\noccurs almost never if P(A) = 0.",
+    "source": "Maths for ML.pdf (chunk 175)"
+  },
+  {
+    "content": "occurs almost never if P(A) = 0.\nFrom these axioms, a number of useful rules can be derived.\nProposition 26. Let A be an event. Then\n(i) P(Ac) = 1 −P(A).\n(ii) If B is an event and B ⊆A, then P(B) ≤P(A).\n(iii) 0 = P(∅) ≤P(A) ≤P(Ω) = 1\nProof. (i) Using the countable additivity of P, we have\nP(A) + P(Ac) = P(A ˙∪Ac) = P(Ω) = 1\nTo show (ii), suppose B ∈F and B ⊆A. Then\nP(A) = P(B ˙∪(A \\ B)) = P(B) + P(A \\ B) ≥P(B)\nas claimed.",
+    "source": "Maths for ML.pdf (chunk 176)"
+  },
+  {
+    "content": "To show (ii), suppose B ∈F and B ⊆A. Then\nP(A) = P(B ˙∪(A \\ B)) = P(B) + P(A \\ B) ≥P(B)\nas claimed.\nFor (iii): the middle inequality follows from (ii) since ∅⊆A ⊆Ω. We also have\nP(∅) = P(∅˙∪∅) = P(∅) + P(∅)\nby countable additivity, which shows P(∅) = 0.\n9 F is required to be a σ-algebra for technical reasons; see [2].\n10 Note that a probability space is simply a measure space in which the measure of the whole space equals 1.",
+    "source": "Maths for ML.pdf (chunk 177)"
+  },
+  {
+    "content": "11 This is a probabilist’s version of the measure-theoretic term almost everywhere.\n37\nProposition 27. If A and B are events, then P(A ∪B) = P(A) + P(B) −P(A ∩B).\nProof. The key is to break the events up into their various overlapping and non-overlapping parts.\nP(A ∪B) = P((A ∩B) ˙∪(A \\ B) ˙∪(B \\ A))\n= P(A ∩B) + P(A \\ B) + P(B \\ A)\n= P(A ∩B) + P(A) −P(A ∩B) + P(B) −P(A ∩B)\n= P(A) + P(B) −P(A ∩B)\nProposition 28. If {Ai} ⊆F is a countable set of events, disjoint or not, then\nP\n\u0012 [\ni\nAi\n\u0013\n≤\nX\ni",
+    "source": "Maths for ML.pdf (chunk 178)"
+  },
+  {
+    "content": "Proposition 28. If {Ai} ⊆F is a countable set of events, disjoint or not, then\nP\n\u0012 [\ni\nAi\n\u0013\n≤\nX\ni\nP(Ai)\nThis inequality is sometimes referred to as Boole’s inequality or the union bound.\nProof. Deﬁne B1 = A1 and Bi = Ai \\ (S\nj<i Aj) for i > 1, noting that S\nj≤i Bj = S\nj≤i Aj for all i\nand the Bi are disjoint. Then\nP\n\u0012 [\ni\nAi\n\u0013\n= P\n\u0012 [\ni\nBi\n\u0013\n=\nX\ni\nP(Bi) ≤\nX\ni\nP(Ai)\nwhere the last inequality follows by monotonicity since Bi ⊆Ai for all i.\n5.1.1\nConditional probability",
+    "source": "Maths for ML.pdf (chunk 179)"
+  },
+  {
+    "content": "5.1.1\nConditional probability\nThe conditional probability of event A given that event B has occurred is written P(A|B) and\ndeﬁned as\nP(A|B) = P(A ∩B)\nP(B)\nassuming P(B) > 0.12\n5.1.2\nChain rule\nAnother very useful tool, the chain rule, follows immediately from this deﬁnition:\nP(A ∩B) = P(A|B)P(B) = P(B|A)P(A)\n5.1.3\nBayes’ rule\nTaking the equality from above one step further, we arrive at the simple but crucial Bayes’ rule:\nP(A|B) = P(B|A)P(A)\nP(B)",
+    "source": "Maths for ML.pdf (chunk 180)"
+  },
+  {
+    "content": "P(A|B) = P(B|A)P(A)\nP(B)\n12 In some cases it is possible to deﬁne conditional probability on events of probability zero, but this is signiﬁcantly\nmore technical so we omit it.\n38\nIt is sometimes beneﬁcial to omit the normalizing constant and write\nP(A|B) ∝P(A)P(B|A)\nUnder this formulation, P(A) is often referred to as the prior, P(A|B) as the posterior, and P(B|A)\nas the likelihood.\nIn the context of machine learning, we can use Bayes’ rule to update our “beliefs” (e.g. values of",
+    "source": "Maths for ML.pdf (chunk 181)"
+  },
+  {
+    "content": "In the context of machine learning, we can use Bayes’ rule to update our “beliefs” (e.g. values of\nour model parameters) given some data that we’ve observed.\n5.2\nRandom variables\nA random variable is some uncertain quantity with an associated probability distribution over the\nvalues it can assume.\nFormally, a random variable on a probability space (Ω, F, P) is a function13 X : Ω→R.14\nWe denote the range of X by X(Ω) = {X(ω) : ω ∈Ω}. To give a concrete example (taken from [3]),",
+    "source": "Maths for ML.pdf (chunk 182)"
+  },
+  {
+    "content": "We denote the range of X by X(Ω) = {X(ω) : ω ∈Ω}. To give a concrete example (taken from [3]),\nsuppose X is the number of heads in two tosses of a fair coin. The sample space is\nΩ= {hh, tt, ht, th}\nand X is determined completely by the outcome ω, i.e. X = X(ω). For example, the event X = 1\nis the set of outcomes {ht, th}.\nIt is common to talk about the values of a random variable without directly referencing its sample",
+    "source": "Maths for ML.pdf (chunk 183)"
+  },
+  {
+    "content": "It is common to talk about the values of a random variable without directly referencing its sample\nspace. The two are related by the following deﬁnition: the event that the value of X lies in some\nset S ⊆R is\nX ∈S = {ω ∈Ω: X(ω) ∈S}\nNote that special cases of this deﬁnition include X being equal to, less than, or greater than some\nspeciﬁed value. For example\nP(X = x) = P({ω ∈Ω: X(ω) = x})\nA word on notation: we write p(X) to denote the entire probability distribution of X and p(x)",
+    "source": "Maths for ML.pdf (chunk 184)"
+  },
+  {
+    "content": "A word on notation: we write p(X) to denote the entire probability distribution of X and p(x)\nfor the evaluation of the function p at a particular value x ∈X(Ω). Hopefully this (reasonably\nstandard) abuse of notation is not too distracting. If p is parameterized by some parameters θ, we\nwrite p(X; θ) or p(x; θ), unless we are in a Bayesian setting where the parameters are considered a\nrandom variable, in which case we condition on the parameters.\n5.2.1\nThe cumulative distribution function",
+    "source": "Maths for ML.pdf (chunk 185)"
+  },
+  {
+    "content": "5.2.1\nThe cumulative distribution function\nThe cumulative distribution function (c.d.f.) gives the probability that a random variable is at\nmost a certain value:\nF(x) = P(X ≤x)\nThe c.d.f. can be used to give the probability that a variable lies within a certain range:\nP(a < X ≤b) = F(b) −F(a)\n13 The function must be measurable.\n14 More generally, the codomain can be any measurable space, but R is the most common case by far and suﬃcient\nfor our purposes.\n39\n5.2.2\nDiscrete random variables",
+    "source": "Maths for ML.pdf (chunk 186)"
+  },
+  {
+    "content": "for our purposes.\n39\n5.2.2\nDiscrete random variables\nA discrete random variable is a random variable that has a countable range and assumes each\nvalue in this range with positive probability. Discrete random variables are completely speciﬁed by\ntheir probability mass function (p.m.f.) p : X(Ω) →[0, 1] which satisﬁes\nX\nx∈X(Ω)\np(x) = 1\nFor a discrete X, the probability of a particular value is given exactly by its p.m.f.:\nP(X = x) = p(x)\n5.2.3\nContinuous random variables",
+    "source": "Maths for ML.pdf (chunk 187)"
+  },
+  {
+    "content": "P(X = x) = p(x)\n5.2.3\nContinuous random variables\nA continuous random variable is a random variable that has an uncountable range and assumes\neach value in this range with probability zero. Most of the continuous random variables that one\nwould encounter in practice are absolutely continuous random variables15, which means that\nthere exists a function p : R →[0, ∞) that satisﬁes\nF(x) ≡\nZ x\n−∞\np(z) dz\nThe function p is called a probability density function (abbreviated p.d.f.) and must satisfy",
+    "source": "Maths for ML.pdf (chunk 188)"
+  },
+  {
+    "content": "The function p is called a probability density function (abbreviated p.d.f.) and must satisfy\nZ ∞\n−∞\np(x) dx = 1\nThe values of this function are not themselves probabilities, since they could exceed 1. However,\nthey do have a couple of reasonable interpretations. One is as relative probabilities; even though\nthe probability of each particular value being picked is technically zero, some points are still in a\nsense more likely than others.",
+    "source": "Maths for ML.pdf (chunk 189)"
+  },
+  {
+    "content": "sense more likely than others.\nOne can also think of the density as determining the probability that the variable will lie in a small\nrange about a given value. This is because, for small ϵ > 0,\nP(x −ϵ ≤X ≤x + ϵ) =\nZ x+ϵ\nx−ϵ\np(z) dz ≈2ϵp(x)\nusing a midpoint approximation to the integral.\nHere are some useful identities that follow from the deﬁnitions above:\nP(a ≤X ≤b) =\nZ b\na\np(x) dx\np(x) = F ′(x)\n5.2.4\nOther kinds of random variables",
+    "source": "Maths for ML.pdf (chunk 190)"
+  },
+  {
+    "content": "P(a ≤X ≤b) =\nZ b\na\np(x) dx\np(x) = F ′(x)\n5.2.4\nOther kinds of random variables\nThere are random variables that are neither discrete nor continuous. For example, consider a random\nvariable determined as follows: ﬂip a fair coin, then the value is zero if it comes up heads, otherwise\ndraw a number uniformly at random from [1, 2]. Such a random variable can take on uncountably\nmany values, but only ﬁnitely many of these with positive probability. We will not discuss such",
+    "source": "Maths for ML.pdf (chunk 191)"
+  },
+  {
+    "content": "many values, but only ﬁnitely many of these with positive probability. We will not discuss such\nrandom variables because they are rather pathological and require measure theory to analyze.\n15 Random variables that are continuous but not absolutely continuous are called singular random variables.\nWe will not discuss them, assuming rather that all continuous random variables admit a density function.\n40\n5.3\nJoint distributions",
+    "source": "Maths for ML.pdf (chunk 192)"
+  },
+  {
+    "content": "40\n5.3\nJoint distributions\nOften we have several random variables and we would like to get a distribution over some combination\nof them. A joint distribution is exactly this. For some random variables X1, . . . , Xn, the joint\ndistribution is written p(X1, . . . , Xn) and gives probabilities over entire assignments to all the Xi\nsimultaneously.\n5.3.1\nIndependence of random variables\nWe say that two variables X and Y are independent if their joint distribution factors into their",
+    "source": "Maths for ML.pdf (chunk 193)"
+  },
+  {
+    "content": "We say that two variables X and Y are independent if their joint distribution factors into their\nrespective distributions, i.e.\np(X, Y ) = p(X)p(Y )\nWe can also deﬁne independence for more than two random variables, although it is more compli-\ncated. Let {Xi}i∈I be a collection of random variables indexed by I, which may be inﬁnite. Then\n{Xi} are independent if for every ﬁnite subset of indices i1, . . . , ik ∈I we have\np(Xi1, . . . , Xik) =\nk\nY\nj=1\np(Xij)",
+    "source": "Maths for ML.pdf (chunk 194)"
+  },
+  {
+    "content": "p(Xi1, . . . , Xik) =\nk\nY\nj=1\np(Xij)\nFor example, in the case of three random variables, X, Y, Z, we require that p(X, Y, Z) = p(X)p(Y )p(Z)\nas well as p(X, Y ) = p(X)p(Y ), p(X, Z) = p(X)p(Z), and p(Y, Z) = p(Y )p(Z).\nIt is often convenient (though perhaps questionable) to assume that a bunch of random variables are\nindependent and identically distributed (i.i.d.) so that their joint distribution can be factored\nentirely:\np(X1, . . . , Xn) =\nn\nY\ni=1\np(Xi)",
+    "source": "Maths for ML.pdf (chunk 195)"
+  },
+  {
+    "content": "entirely:\np(X1, . . . , Xn) =\nn\nY\ni=1\np(Xi)\nwhere X1, . . . , Xn all share the same p.m.f./p.d.f.\n5.3.2\nMarginal distributions\nIf we have a joint distribution over some set of random variables, it is possible to obtain a distribution\nfor a subset of them by “summing out” (or “integrating out” in the continuous case) the variables\nwe don’t care about:\np(X) =\nX\ny\np(X, y)\n5.4\nGreat Expectations\nIf we have some random variable X, we might be interested in knowing what is the “average” value",
+    "source": "Maths for ML.pdf (chunk 196)"
+  },
+  {
+    "content": "If we have some random variable X, we might be interested in knowing what is the “average” value\nof X. This concept is captured by the expected value (or mean) E[X], which is deﬁned as\nE[X] =\nX\nx∈X(Ω)\nxp(x)\nfor discrete X and as\nE[X] =\nZ ∞\n−∞\nxp(x) dx\nfor continuous X.\n41\nIn words, we are taking a weighted sum of the values that X can take on, where the weights are\nthe probabilities of those respective values. The expected value has a physical interpretation as the",
+    "source": "Maths for ML.pdf (chunk 197)"
+  },
+  {
+    "content": "“center of mass” of the distribution.\n5.4.1\nProperties of expected value\nA very useful property of expectation is that of linearity:\nE\n\n\nn\nX\ni=1\nαiXi + β\n\n=\nn\nX\ni=1\nαiE[Xi] + β\nNote that this holds even if the Xi are not independent!\nBut if they are independent, the product rule also holds:\nE\n\n\nn\nY\ni=1\nXi\n\n=\nn\nY\ni=1\nE[Xi]\n5.5\nVariance\nExpectation provides a measure of the “center” of a distribution, but frequently we are also interested",
+    "source": "Maths for ML.pdf (chunk 198)"
+  },
+  {
+    "content": "in what the “spread” is about that center. We deﬁne the variance Var(X) of a random variable X\nby\nVar(X) = E\nh\u0000X −E[X]\n\u00012i\nIn words, this is the average squared deviation of the values of X from the mean of X. Using a little\nalgebra and the linearity of expectation, it is straightforward to show that\nVar(X) = E[X2] −E[X]2\n5.5.1\nProperties of variance\nVariance is not linear (because of the squaring in the deﬁnition), but one can show the following:\nVar(αX + β) = α2 Var(X)",
+    "source": "Maths for ML.pdf (chunk 199)"
+  },
+  {
+    "content": "Var(αX + β) = α2 Var(X)\nBasically, multiplicative constants become squared when they are pulled out, and additive constants\ndisappear (since the variance contributed by a constant is zero).\nFurthermore, if X1, . . . , Xn are uncorrelated16, then\nVar(X1 + · · · + Xn) = Var(X1) + · · · + Var(Xn)\n5.5.2\nStandard deviation\nVariance is a useful notion, but it suﬀers from that fact the units of variance are not the same as",
+    "source": "Maths for ML.pdf (chunk 200)"
+  },
+  {
+    "content": "Variance is a useful notion, but it suﬀers from that fact the units of variance are not the same as\nthe units of the random variable (again because of the squaring). To overcome this problem we can\nuse standard deviation, which is deﬁned as\np\nVar(X). The standard deviation of X has the same\nunits as X.\n16 We haven’t deﬁned this yet; see the Correlation section below\n42\n5.6\nCovariance\nCovariance is a measure of the linear relationship between two random variables. We denote the",
+    "source": "Maths for ML.pdf (chunk 201)"
+  },
+  {
+    "content": "Covariance is a measure of the linear relationship between two random variables. We denote the\ncovariance between X and Y as Cov(X, Y ), and it is deﬁned to be\nCov(X, Y ) = E[(X −E[X])(Y −E[Y ])]\nNote that the outer expectation must be taken over the joint distribution of X and Y .\nAgain, the linearity of expectation allows us to rewrite this as\nCov(X, Y ) = E[XY ] −E[X]E[Y ]\nComparing these formulas to the ones for variance, it is not hard to see that Var(X) = Cov(X, X).",
+    "source": "Maths for ML.pdf (chunk 202)"
+  },
+  {
+    "content": "Comparing these formulas to the ones for variance, it is not hard to see that Var(X) = Cov(X, X).\nA useful property of covariance is that of bilinearity:\nCov(αX + βY, Z) = α Cov(X, Z) + β Cov(Y, Z)\nCov(X, αY + βZ) = α Cov(X, Y ) + β Cov(X, Z)\n5.6.1\nCorrelation\nNormalizing the covariance gives the correlation:\nρ(X, Y ) =\nCov(X, Y )\np\nVar(X) Var(Y )\nCorrelation also measures the linear relationship between two variables, but unlike covariance always\nlies between −1 and 1.",
+    "source": "Maths for ML.pdf (chunk 203)"
+  },
+  {
+    "content": "lies between −1 and 1.\nTwo variables are said to be uncorrelated if Cov(X, Y ) = 0 because Cov(X, Y ) = 0 implies that\nρ(X, Y ) = 0. If two variables are independent, then they are uncorrelated, but the converse does\nnot hold in general.\n5.7\nRandom vectors\nSo far we have been talking about univariate distributions, that is, distributions of single vari-\nables. But we can also talk about multivariate distributions which give distributions of random\nvectors:\nX =\n\n\nX1\n...\nXn\n\n",
+    "source": "Maths for ML.pdf (chunk 204)"
+  },
+  {
+    "content": "vectors:\nX =\n\n\nX1\n...\nXn\n\n\nThe summarizing quantities we have discussed for single variables have natural generalizations to\nthe multivariate case.\nExpectation of a random vector is simply the expectation applied to each component:\nE[X] =\n\n\nE[X1]\n...\nE[Xn]\n\n\n43\nThe variance is generalized by the covariance matrix:\nΣ = E[(X −E[X])(X −E[X])⊤] =\n\n\nVar(X1)\nCov(X1, X2)\n. . .\nCov(X1, Xn)\nCov(X2, X1)\nVar(X2)\n. . .\nCov(X2, Xn)\n...\n...\n...\n...\nCov(Xn, X1)\nCov(Xn, X2)\n. . .\nVar(Xn)",
+    "source": "Maths for ML.pdf (chunk 205)"
+  },
+  {
+    "content": "Cov(X2, X1)\nVar(X2)\n. . .\nCov(X2, Xn)\n...\n...\n...\n...\nCov(Xn, X1)\nCov(Xn, X2)\n. . .\nVar(Xn)\n\n\nThat is, Σij = Cov(Xi, Xj). Since covariance is symmetric in its arguments, the covariance matrix\nis also symmetric. It’s also positive semi-deﬁnite: for any x,\nx⊤Σx = x⊤E[(X −E[X])(X −E[X])⊤]x = E[x⊤(X −E[X])(X −E[X])⊤x] = E[((X −E[X])⊤x)2] ≥0\nThe inverse of the covariance matrix, Σ−1, is sometimes called the precision matrix.\n5.8\nEstimation of Parameters",
+    "source": "Maths for ML.pdf (chunk 206)"
+  },
+  {
+    "content": "5.8\nEstimation of Parameters\nNow we get into some basic topics from statistics. We make some assumptions about our problem by\nprescribing a parametric model (e.g. a distribution that describes how the data were generated),\nthen we ﬁt the parameters of the model to the data. How do we choose the values of the parameters?\n5.8.1\nMaximum likelihood estimation\nA common way to ﬁt parameters is maximum likelihood estimation (MLE). The basic principle",
+    "source": "Maths for ML.pdf (chunk 207)"
+  },
+  {
+    "content": "A common way to ﬁt parameters is maximum likelihood estimation (MLE). The basic principle\nof MLE is to choose values that “explain” the data best by maximizing the probability/density of\nthe data we’ve seen as a function of the parameters. Suppose we have random variables X1, . . . , Xn\nand corresponding observations x1, . . . , xn. Then\nˆθmle = arg max\nθ\nL(θ)\nwhere L is the likelihood function\nL(θ) = p(x1, . . . , xn; θ)\nOften, we assume that X1, . . . , Xn are i.i.d. Then we can write",
+    "source": "Maths for ML.pdf (chunk 208)"
+  },
+  {
+    "content": "L(θ) = p(x1, . . . , xn; θ)\nOften, we assume that X1, . . . , Xn are i.i.d. Then we can write\np(x1, . . . , xn; θ) =\nn\nY\ni=1\np(xi; θ)\nAt this point, it is usually convenient to take logs, giving rise to the log-likelihood\nlog L(θ) =\nn\nX\ni=1\nlog p(xi; θ)\nThis is a valid operation because the probabilities/densities are assumed to be positive, and since\nlog is a monotonically increasing function, it preserves ordering. In other words, any maximizer of\nlog L will also maximize L.",
+    "source": "Maths for ML.pdf (chunk 209)"
+  },
+  {
+    "content": "log L will also maximize L.\nFor some distributions, it is possible to analytically solve for the maximum likelihood estimator. If\nlog L is diﬀerentiable, setting the derivatives to zero and trying to solve for θ is a good place to start.\n44\n5.8.2\nMaximum a posteriori estimation\nA more Bayesian way to ﬁt parameters is through maximum a posteriori estimation (MAP).\nIn this technique we assume that the parameters are a random variable, and we specify a prior",
+    "source": "Maths for ML.pdf (chunk 210)"
+  },
+  {
+    "content": "In this technique we assume that the parameters are a random variable, and we specify a prior\ndistribution p(θ). Then we can employ Bayes’ rule to compute the posterior distribution of the\nparameters given the observed data:\np(θ|x1, . . . , xn) ∝p(θ)p(x1, . . . , xn|θ)\nComputing the normalizing constant is often intractable, because it involves integrating over the\nparameter space, which may be very high-dimensional.\nFortunately, if we just want the MAP",
+    "source": "Maths for ML.pdf (chunk 211)"
+  },
+  {
+    "content": "parameter space, which may be very high-dimensional.\nFortunately, if we just want the MAP\nestimate, we don’t care about the normalizing constant! It does not aﬀect which values of θ maximize\nthe posterior. So we have\nˆθmap = arg max\nθ\np(θ)p(x1, . . . , xn|θ)\nAgain, if we assume the observations are i.i.d., then we can express this in the equivalent, and\npossibly friendlier, form\nˆθmap = arg max\nθ\n\nlog p(θ) +\nn\nX\ni=1\nlog p(xi|θ)\n\n",
+    "source": "Maths for ML.pdf (chunk 212)"
+  },
+  {
+    "content": "possibly friendlier, form\nˆθmap = arg max\nθ\n\nlog p(θ) +\nn\nX\ni=1\nlog p(xi|θ)\n\n\nA particularly nice case is when the prior is chosen carefully such that the posterior comes from the\nsame family as the prior. In this case the prior is called a conjugate prior. For example, if the\nlikelihood is binomial and the prior is beta, the posterior is also beta. There are many conjugate\npriors; the reader may ﬁnd this table of conjugate priors useful.\n5.9\nThe Gaussian distribution",
+    "source": "Maths for ML.pdf (chunk 213)"
+  },
+  {
+    "content": "priors; the reader may ﬁnd this table of conjugate priors useful.\n5.9\nThe Gaussian distribution\nThere are many distributions, but one of particular importance is the Gaussian distribution, also\nknown as the normal distribution. It is a continuous distribution, parameterized by its mean\nµ ∈Rd and positive-deﬁnite covariance matrix Σ ∈Rd×d, with density\np(x; µ, Σ) =\n1\np\n(2π)d det(Σ)\nexp\n\u0012\n−1\n2(x −µ)⊤Σ−1(x −µ)\n\u0013",
+    "source": "Maths for ML.pdf (chunk 214)"
+  },
+  {
+    "content": "p(x; µ, Σ) =\n1\np\n(2π)d det(Σ)\nexp\n\u0012\n−1\n2(x −µ)⊤Σ−1(x −µ)\n\u0013\nNote that in the special case d = 1, the density is written in the more recognizable form\np(x; µ, σ2) =\n1\n√\n2πσ2 exp\n \n−(x −µ)2\n2σ2\n!\nWe write X ∼N(µ, Σ) to denote that X is normally distributed with mean µ and variance Σ.\n5.9.1\nThe geometry of multivariate Gaussians\nThe geometry of the multivariate Gaussian density is intimately related to the geometry of positive",
+    "source": "Maths for ML.pdf (chunk 215)"
+  },
+  {
+    "content": "The geometry of the multivariate Gaussian density is intimately related to the geometry of positive\ndeﬁnite quadratic forms, so make sure the material in that section is well-understood before tackling\nthis section.\nFirst observe that the p.d.f. of the multivariate Gaussian can be rewritten as\np(x; µ, Σ) = g(˜x⊤Σ−1˜x)\n45\nwhere ˜x = x −µ and g(z) = [(2π)d det(Σ)]−1\n2 exp\n\u0000−z\n2\n\u0001\n. Writing the density in this way, we see",
+    "source": "Maths for ML.pdf (chunk 216)"
+  },
+  {
+    "content": "where ˜x = x −µ and g(z) = [(2π)d det(Σ)]−1\n2 exp\n\u0000−z\n2\n\u0001\n. Writing the density in this way, we see\nthat after shifting by the mean µ, the density is really just a simple function of its precision matrix’s\nquadratic form.\nHere is a key observation: this function g is strictly monotonically decreasing in its argument.\nThat is, g(a) > g(b) whenever a < b. Therefore, small values of ˜x⊤Σ−1˜x (which generally correspond",
+    "source": "Maths for ML.pdf (chunk 217)"
+  },
+  {
+    "content": "to points where ˜x is closer to 0, i.e. x ≈µ) have relatively high probability densities, and vice-versa.\nFurthermore, because g is strictly monotonic, it is injective, so the c-isocontours of p(x; µ, Σ) are\nthe g−1(c)-isocontours of the function x 7→˜x⊤Σ−1˜x. That is, for any c,\n{x ∈Rd : p(x; µ, Σ) = c} = {x ∈Rd : ˜x⊤Σ−1˜x = g−1(c)}\nIn words, these functions have the same isocontours but diﬀerent isovalues.",
+    "source": "Maths for ML.pdf (chunk 218)"
+  },
+  {
+    "content": "In words, these functions have the same isocontours but diﬀerent isovalues.\nRecall the executive summary of the geometry of positive deﬁnite quadratic forms: the isocontours\nof f(x) = x⊤Ax are ellipsoids such that the axes point in the directions of the eigenvectors of\nA, and the lengths of these axes are proportional to the inverse square roots of the corresponding\neigenvalues. Therefore in this case, the isocontours of the density are ellipsoids (centered at µ) with",
+    "source": "Maths for ML.pdf (chunk 219)"
+  },
+  {
+    "content": "axis lengths proportional to the inverse square roots of the eigenvalues of Σ−1, or equivalently, the\nsquare roots of the eigenvalues of Σ.\n46\nAcknowledgements\nThe author would like to thank Michael Franco for suggested clariﬁcations, and Chinmoy Saayujya\nfor catching a typo.\nReferences\n[1] J. Nocedal and S. J. Wright, Numerical Optimization. New York: Springer Science+Business\nMedia, 2006.\n[2] J. S. Rosenthal, A First Look at Rigorous Probability Theory (Second Edition). Singapore: World",
+    "source": "Maths for ML.pdf (chunk 220)"
+  },
+  {
+    "content": "[2] J. S. Rosenthal, A First Look at Rigorous Probability Theory (Second Edition). Singapore: World\nScientiﬁc Publishing, 2006.\n[3] J. Pitman, Probability. New York: Springer-Verlag, 1993.\n[4] S. Axler, Linear Algebra Done Right (Third Edition). Springer International Publishing, 2015.\n[5] S. Boyd and L. Vandenberghe, Convex Optimization. New York: Cambridge University Press,\n2009.\n[6] J. A. Rice, Mathematical Statistics and Data Analysis.\nBelmont, California:\nThomson\nBrooks/Cole, 2007.",
+    "source": "Maths for ML.pdf (chunk 221)"
+  },
+  {
+    "content": "Belmont, California:\nThomson\nBrooks/Cole, 2007.\n[7] W. Cheney, Analysis for Applied Mathematics. New York: Springer Science+Business Medias,\n2001.\n47",
+    "source": "Maths for ML.pdf (chunk 222)"
+  }
+]

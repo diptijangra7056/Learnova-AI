@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Login</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1>🔑 Student Login</h1>
+    <form method="POST">
+      <input type="text" name="enrollment_id" placeholder="Enrollment ID" required>
+      <input type="password" name="password" placeholder="Password" required>
+      <button type="submit">Login</button>
+    </form>
+  </div>
+</body>
+</html>
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Login</title>
+
+  Google Font
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      height: 100vh;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .login-box {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(12px);
+      padding: 40px;
+      width: 350px;
+      border-radius: 15px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+      text-align: center;
+      color: white;
+    }
+
+    .login-box h2 {
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      margin-bottom: 25px;
+      opacity: 0.8;
+    }
+
+    .input-group {
+      position: relative;
+      margin-bottom: 25px;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      outline: none;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.2);
+      color: white;
+      font-size: 14px;
+    }
+
+    .input-group label {
+      position: absolute;
+      top: 50%;
+      left: 12px;
+      transform: translateY(-50%);
+      color: #ddd;
+      font-size: 14px;
+      pointer-events: none;
+      transition: 0.3s;
+    }
+
+    .input-group input:focus + label,
+    .input-group input:valid + label {
+      top: -8px;
+      left: 8px;
+      font-size: 12px;
+      background: #764ba2;
+      padding: 2px 6px;
+      border-radius: 5px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background: #00c9a7;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #00a78e;
+      transform: scale(1.03);
+    }
+
+    .footer-text {
+      margin-top: 15px;
+      font-size: 12px;
+      opacity: 0.7;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="login-box">
+    <h2>Welcome Back 👋</h2>
+    <p class="subtitle">Login to continue</p>
+
+    <form method="POST">
+
+      <div class="input-group">
+        <input type="text" name="enrollment_id" required>
+        <label>Enrollment ID</label>
+      </div>
+
+      <div class="input-group">
+        <input type="password" name="password" required>
+        <label>Password</label>
+      </div>
+
+      <button type="submit">Login</button>
+
+    </form>
+
+    <p class="footer-text">AI Tutor System 🚀</p>
+  </div>
+
+</body>
+</html>  -->

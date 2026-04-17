@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI-based Course Recommendion and Personal Tutor</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1>🎓AI Personal Tutor</h1>
+    <form method="POST">
+      <input type="text" name="student_id" placeholder="Enter Student ID" required>
+      <input type="number" name="english_marks" placeholder="English Marks" required>
+      <input type="number" name="math_marks" placeholder="Math Marks" required>
+      <input type="number" name="science_marks" placeholder="Science Marks" required>
+      <input type="number" name="computer_marks" placeholder="Computer Marks" required>
+      <button type="submit">Get Recommendation</button>
+    </form>
+    <a href="{{ url_for('login') }}" class="link">Already enrolled? Login here</a>
+  </div>
+</body>
+</html>
